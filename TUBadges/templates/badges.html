@@ -1,0 +1,92 @@
+{% load staticfiles %}
+{% include 'header.html' with page='My Badges' menu_selected=0 %}
+    <div class="col">
+        <h1>Öffentliche Badges</h1>
+        <div class="badges">
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge</h2>
+                <div class="info">
+                    <span class="label">von</span> Awesome Inc.<br/>
+                    <span class="label">via</span> Peter Purgathofer
+                </div>
+            </div>
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge mit einem langen langen Namen</h2>
+                <div class="info">
+                    <span class="label">von</span> Awesome Inc.<br/>
+                    <span class="label">via</span> Peter Purgathofer
+                </div>
+            </div>
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge mit einem echt noch viel langeren Namen wow.</h2>
+                <div class="info">
+                    <span class="label">von</span> Peter Purgathofer
+                </div>
+            </div>
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge mit einem langen langen Namen</h2>
+                <div class="info">
+                    <span class="label">von</span> Awesome Inc.<br/>
+                    <span class="label">via</span> Peter Purgathofer
+                </div>
+            </div>
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge</h2>
+                <div class="info">
+                    <span class="label">von</span> Awesome Inc.<br/>
+                    <span class="label">via</span> Peter Purgathofer
+                </div>
+            </div>
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge mit einem echt noch viel langeren Namen wow.</h2>
+                <div class="info">
+                    <span class="label">von</span> Peter Purgathofer
+                </div>
+            </div>
+        </div>
+        {{ badges }}
+    </div>
+    <div class="col">
+        <h1>Meine Badges</h1>
+<div class="badges">
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge</h2>
+                <div class="info">
+                    <span class="label">von</span> Awesome Inc.<br/>
+                    <span class="label">via</span> Peter Purgathofer
+                </div>
+            </div>
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge mit einem langen langen Namen</h2>
+                <div class="info">
+                    <span class="label">von</span> Awesome Inc.<br/>
+                    <span class="label">via</span> Peter Purgathofer
+                </div>
+            </div>
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge mit einem echt noch viel langeren Namen wow.</h2>
+                <div class="info">
+                    <span class="label">von</span> Peter Purgathofer
+                </div>
+            </div>
+            <div class="badge box">
+                <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                <h2>Ein toller Badge mit einem langen langen Namen</h2>
+                <div class="info">
+                    <span class="label">von</span> Awesome Inc.<br/>
+                    <span class="label">via</span> Peter Purgathofer
+                </div>
+            </div>
+        </div>
+        {{ badges }}
+    </div>
+{% include 'footer.html' %}

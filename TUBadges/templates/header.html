@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TU Badges{% if page %} - {{ page }} {% endif %}</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,600italic,400italic|Yanone+Kaffeesatz:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static "styles.css" %}" />
+    <script type="text/javascript" src="{% static "scripts/jquery.min.js" %}" ></script>
+    <script type="text/javascript" src="{% static "scripts/jquery.isotope.min.js" %}" ></script>
+    <script type="text/javascript" src="{% static "scripts/script.js" %}" ></script>
+</head>
+<body>
+    <div id="container">
+        <div id="header" class="box">
+            <div id="logo"><img src="{% static "images/logo.png" %}" alt="TU Wien Badges" width="168" height="66"/></div>
+            <ul id="nav">
+                <li{% if menu_selected == 0 %} class="selected"{% endif %}><a href="/">Meine Badges</a></li>
+                <li{% if menu_selected == 1 %} class="selected"{% endif %}><a href="/presets">Badge Presets</a></li>
+                <li><a href="#issue_badge">Badge vergeben</a></li>
+            </ul>
+            <div id="useractions"></div>
+        </div>
+        <div id="content">
