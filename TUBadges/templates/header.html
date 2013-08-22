@@ -11,6 +11,7 @@
 </head>
 <body>
     <div id="container">
+        {% if hideMenu == None %}
         <div id="header" class="box">
             <div id="logo"><img src="{% static "images/logo.png" %}" alt="TU Wien Badges" width="168" height="66"/></div>
             <ul id="nav">
@@ -20,4 +21,5 @@
             </ul>
             <div id="useractions"></div>
         </div>
+        {% endif %}
         <div id="content">

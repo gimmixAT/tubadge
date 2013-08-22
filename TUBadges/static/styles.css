@@ -3,6 +3,8 @@ html, body, div, ul, li, p, span {
     padding:0;
 }
 
+input, select, textarea, button{font-family:inherit;}
+
 body {
     background-color:#f0f0f0;
     font-family:'Open Sans', sans-serif;
@@ -13,6 +15,7 @@ h1 {
     font-size:30px;
     font-family:'Yanone Kaffeesatz', sans-serif;
     font-weight:300;
+    text-align:left;
 }
 
 .box {
@@ -160,6 +163,66 @@ h1 {
                 color:#999999;
             }
 
+    input {
+        font-size:18px;
+        color:#111111;
+        padding:5px;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        display:block;
+        background:transparent;
+        border:0;
+        border-bottom:1px solid #666666;
+        width:100%;
+        margin:10px 0 10px 0;
+        -moz-box-shadow: 1px -5px 0px #ffffff, 1px 0px 0px #111111, -1px -5px 0px #ffffff, -1px 0px 0px #111111;
+        box-shadow: 1px -5px 0px #ffffff, 1px 0px 0px #111111, -1px -5px 0px #ffffff, -1px 0px 0px #111111;
+    }
+
+    input[type="button"], input[type="submit"] {
+        background:#ffffff;
+        color:#0070af;
+        font-weight:600;
+        border:0;
+        cursor: pointer;
+        box-shadow:none;
+        width:auto;
+        padding:5px 0 5px 0;
+        float:right;
+    }
+
+    input[type="button"]:hover, input[type="submit"]:hover {
+        text-shadow: 0px 2px 0px #ffffff, 2px 2px 0px #ffffff, -2px 2px 0px #ffffff;
+        box-shadow: inset 0px -8px 0px #ffffff, inset 0px -10px 0px #0070af;
+    }
+
+    div.box.login {
+        width:100%;
+        max-width:400px;
+        overflow: hidden;
+        min-height:300px;
+        height:0%;
+        margin:0 auto 0 auto;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        padding:30px;
+        margin: auto;
+        position: absolute;
+        top: 0; left: 0; bottom: 0; right: 0;
+        text-align:center;
+    }
+
+        div.box.login > form {
+            margin-top:30px;
+        }
+
+        div.box.login > img {
+            width:100%;
+            max-width:168px;
+            height:auto;
+        }
 
 /* Liquid rules */
 

@@ -30,13 +30,17 @@ class BadgeUser(models.Model):
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
     student_id = models.CharField(max_length=10)
-    role = models.CharField(choices=ROLES, default=STUDENT)
+    object_id = models.IntegerField(blank=True, null=True)
+    role = models.CharField(max_length=4, choices=ROLES, default=STUDENT)
 
-    def check_password (self, raw_password):
+    def check_password(self, raw_password):
         return check_password(raw_password, self.password)
 
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
+
+    def __unicode__(self):
+        return self.firstname+" "+self.lastname+" ("+self.email+")"
 
 
 class BadgePreset(models.Model):

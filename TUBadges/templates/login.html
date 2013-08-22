@@ -1,3 +1,14 @@
-{% include header with page='Login' %}
+{% load staticfiles %}
+{% include 'header.html' with page='Login' hideMenu=True %}
 
-{% include footer %}
+        <div class="box login">
+            <img src="{% static "images/logo.png" %}" alt="TU Wien Badges" width="168" height="66"/>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input name="mail" id="mail" placeholder="E-Mail Adresse" />
+                <input name="pw" id="pw" type="password" placeholder="Passwort"/>
+                <input type="submit" value="&raquo; einloggen" />
+            </form>
+        </div>
+
+{% include 'footer.html' %}
