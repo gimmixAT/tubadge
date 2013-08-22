@@ -18,6 +18,15 @@ h1 {
     text-align:left;
 }
 
+a {
+    text-decoration:none;
+    color:#0070af;
+}
+
+    a:hover {
+        text-decoration:underline;
+    }
+
 .box {
     background-color:#ffffff;
     -moz-box-shadow: 1px 1px 3px rgba(0,0,0,0.17);
@@ -48,7 +57,6 @@ h1 {
 #header {
     width: 100%;
     height:95px;
-    overflow: hidden;
     position: relative;
 }
 
@@ -96,6 +104,23 @@ h1 {
                 color: #333333;
             }
 
+    #useractions {
+        position:absolute;
+        top:10px;
+        right:15px;
+        font-size:14px;
+        line-height:18px;
+        text-align:right;
+    }
+
+    #useractions .logout {
+        position:absolute;
+        right:0px;
+        top:54px;
+        color:#0070af;
+    }
+
+
 #content{
     width: 100%;
     padding: 0 15px;
@@ -116,7 +141,7 @@ h1 {
     }
 
     .badge {
-        width:31.5%;
+        width:15%;
         margin:0 0 1.5% 0;
         padding:8px;
         -moz-box-sizing: border-box;
@@ -128,10 +153,10 @@ h1 {
         left:0;
     }
 
-    .col .badge {
-        width:31.5%;
-        margin:0 0 1.5% 0;
-    }
+        .col .badge {
+            width:31.5%;
+            margin:0 0 1.5% 0;
+        }
 
         .badge .image {
             width:100%;
@@ -141,6 +166,14 @@ h1 {
             background-color: #cccccc;
             overflow: hidden;
         }
+
+            .badge.gold .image {
+                background-color: #ffcc00;
+            }
+
+            .badge.bronze .image {
+                background-color: #cc9933;
+            }
 
         .badge .image > img {
             width: 90%;
@@ -162,6 +195,61 @@ h1 {
             .badge .info .label{
                 color:#999999;
             }
+
+        .badge .public-indicator {
+            display:block;
+            width:20px;
+            height:20px;
+            position:absolute;
+            left:6px;
+            top:5px;
+            overflow:hidden;
+            background: url('./images/eye.png') no-repeat 0 0;
+        }
+
+            .badge.public .public-indicator {
+                background-position:0 -40px;
+            }
+
+            .badge .public-indicator:hover {
+                background-position:0 -20px;
+            }
+
+        .badge .value-indicator {
+            width:12px;
+            height:12px;
+            position:absolute;
+            right:8px;
+            top:8px;
+            overflow:hidden;
+            border:2px solid #cccccc;
+            border-radius:7px;
+        }
+
+            .badge .value-indicator .value {
+                width:12px;
+                height:50%;
+                background-color: #cccccc;
+                position: absolute;
+                bottom:0;
+            }
+
+            .badge.gold .value-indicator {
+                border-color:#ffcc00;
+            }
+
+                .badge.gold .value-indicator .value {
+                    background-color: #ffcc00;
+                }
+
+            .badge.bronze .value-indicator {
+                border-color:#cc9933;
+            }
+
+                .badge.bronze .value-indicator .value {
+                    background-color: #cc9933;
+                }
+
 
     input {
         font-size:18px;
@@ -226,14 +314,24 @@ h1 {
 
 /* Liquid rules */
 
-@media (max-width: 1100px){
-    .col .badge {
-        width:48%;
-        margin:0 0 2% 0;
+@media (max-width: 1200px){
+    .badge {
+        width:19%;
+        margin:0 0 1% 0;
     }
 }
 
-@media (max-width: 769px){
+@media (max-width: 1000px){
+
+    .badge {
+        width:24%;
+        margin:0 0 1% 0;
+    }
+
+        .col .badge {
+            width:48%;
+            margin:0 0 2% 0;
+        }
 
     #container{
         width: 90%;
@@ -242,9 +340,47 @@ h1 {
 
 }
 
+@media (max-width: 769px){
+
+    .prof #nav {
+        left:15px;
+        top:105px;
+    }
+
+    .prof #content{
+        margin-top:50px;
+    }
+
+}
+
+@media (max-width: 730px){
+    .badge {
+        width:31.5%;
+        margin:0 0 1.5% 0;
+    }
+}
+
 @media (max-width: 600px){
-    .col .badge {
+    .badge {
+        width:49%;
+        margin:0 0 1% 0;
+    }
+        .col .badge {
+            width:100%;
+            margin:0 0 10px 0;
+        }
+}
+
+@media (max-width: 480px){
+    #container{
+        width: 100%;
+        margin: 0;
+    }
+}
+
+@media (max-width: 280px){
+    .badge {
         width:100%;
-        margin:0 0 10px 0;
+        margin:0 0 1.5% 0;
     }
 }

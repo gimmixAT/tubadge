@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from BadgePortfolio.models import *
 from login_handler import check_if_login
+from random import choice
 import logging
 
 logger = logging.getLogger(__name__)
@@ -28,9 +29,21 @@ def badges(request):
     """
     check_if_login(request)
     if 'uid' in request.GET:
-        return render_to_response('badges.html', {'badges': Badge.objects.filter(awardee=request.GET['uid'], public=True)})
+        content = { 'badges': Badge.objects.filter(awardee=request.GET['uid'], public=True) }
+        content.update(get_header_content(request))
+
+        return render_to_response(
+            'badges.html',
+            content
+        )
     elif 'uID' in request.session:
-        return render_to_response('badges.html', {'badges': Badge.objects.filter(awardee=request.session['uID'])})
+        content = {'badges': Badge.objects.filter(awardee=request.session['uID'])}
+        content.update(get_header_content(request))
+
+        return render_to_response(
+            'badges.html',
+            content
+        )
     else:
         return login(request)
 
@@ -42,6 +55,23 @@ def presets(request):
     :return:
     """
     if request.user.is_authenticated() and request.user.has_perm(Permission.objects.get(codename='can_have_presets')):
-        return render_to_response('presets.html', {'presets': BadgePreset.objects.filter(owner=request.user.id)})
+        content = {'presets': BadgePreset.objects.filter(owner=request.user.id)}
+        content.update(get_header_content(request))
+
+        return render_to_response('presets.html', content)
     else:
         return login(request)
+
+
+def get_header_content(request):
+    content = {}
+
+    if 'uID' in request.session:
+        bu = BadgeUser.objects.get(id=request.session['uID'])
+        content['username'] = bu.firstname+' '+bu.lastname
+        if bu.role == BadgeUser.PROFESSOR:
+            content['prof'] = True
+
+    content['greeting'] = choice(['Willkommen', 'Hej', 'Oh Hai!', 'Servus', 'Hello', 'Bonjour', 'Salut', 'Nei Ho', 'Aloha', 'Ciao', 'Hola', 'Kon-nichiwa', 'Namaste'])
+
+    return content

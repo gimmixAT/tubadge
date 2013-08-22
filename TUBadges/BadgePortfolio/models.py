@@ -29,7 +29,7 @@ class BadgeUser(models.Model):
     password = models.CharField(max_length=128)
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
-    student_id = models.CharField(max_length=10)
+    student_id = models.CharField(max_length=10, default=0)
     object_id = models.IntegerField(blank=True, null=True)
     role = models.CharField(max_length=4, choices=ROLES, default=STUDENT)
 
