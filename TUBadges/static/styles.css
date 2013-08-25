@@ -151,6 +151,7 @@ a {
         position: absolute;
         top:0;
         left:0;
+        z-index:1;
     }
 
         .col .badge {
@@ -215,40 +216,79 @@ a {
                 background-position:0 -20px;
             }
 
-        .badge .value-indicator {
-            width:12px;
-            height:12px;
+        .badge .value {
             position:absolute;
-            right:8px;
-            top:8px;
-            overflow:hidden;
-            border:2px solid #cccccc;
-            border-radius:7px;
+            top:0;
+            right:0;
+            z-index:2;
+            min-width:30px;
+            min-height:30px;
         }
 
-            .badge .value-indicator .value {
+            .badge .value > .overlay {
+                font-size:12px;
+                line-height:16px;
+                color:#333333;
+                padding:7px;
+                position:relative;
+                left:50%;
+                margin:-67px 0 0 -31px;
+                white-space: nowrap;
+                display: none;
+            }
+
+                .badge .value:hover > .overlay {
+                    display: block;
+                }
+
+                .badge .value > .overlay:before {
+                    content:'';
+                    background:url('./images/arrow.png') no-repeat center top;
+                    width:100%;
+                    height:11px;
+                    position:absolute;
+                    left:0;
+                    bottom:-11px;
+                }
+
+                .badge .value > .overlay .label {
+                    color:#666666;
+                }
+
+            .badge .value > .indicator {
                 width:12px;
-                height:50%;
-                background-color: #cccccc;
-                position: absolute;
-                bottom:0;
+                height:12px;
+                position:absolute;
+                right:8px;
+                top:8px;
+                overflow:hidden;
+                border:2px solid #cccccc;
+                border-radius:7px;
             }
 
-            .badge.gold .value-indicator {
-                border-color:#ffcc00;
-            }
-
-                .badge.gold .value-indicator .value {
-                    background-color: #ffcc00;
+                .badge .value > .indicator > .fill {
+                    width:12px;
+                    height:50%;
+                    background-color: #cccccc;
+                    position: absolute;
+                    bottom:0;
                 }
 
-            .badge.bronze .value-indicator {
-                border-color:#cc9933;
-            }
-
-                .badge.bronze .value-indicator .value {
-                    background-color: #cc9933;
+                .badge.gold .value > .indicator {
+                    border-color:#ffcc00;
                 }
+
+                    .badge.gold .value > .indicator > .fill {
+                        background-color: #ffcc00;
+                    }
+
+                .badge.bronze .value > .indicator {
+                    border-color:#cc9933;
+                }
+
+                    .badge.bronze .value > .indicator > .fill {
+                        background-color: #cc9933;
+                    }
 
 
     input {
@@ -332,6 +372,17 @@ a {
             width:48%;
             margin:0 0 2% 0;
         }
+
+        .badge .value > .overlay {
+            right:0;
+            left:auto;
+            margin:-67px 0 0 0px;
+        }
+
+            .badge .value > .overlay:before {
+                background:url('./images/arrow.png') no-repeat right top;
+                left:-7px;
+            }
 
     #container{
         width: 90%;

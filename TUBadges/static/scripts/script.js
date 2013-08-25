@@ -20,15 +20,15 @@ function getColumnWidth(cols){
     var w = window.innerWidth;
     var out = $('.badges').width() * 1/(6*cols);
 
-    if(w < 280 ){
+    if(w <= 280 ){
         out = $('.badges').width() * 1/cols;
-    } else if(w < 600 ){
+    } else if(w <= 600 ){
         out = $('.badges').width() * 1/(2*cols);
-    } else if (w < 730) {
+    } else if (w <= 730) {
         out = $('.badges').width() * 1/(3*cols);
-    } else if (w < 1000) {
+    } else if (w <= 1000) {
         out = $('.badges').width() * 1/(4*cols);
-    } else if (w < 1200) {
+    } else if (w <= 1200) {
         out = $('.badges').width() * 1/(5*cols);
     }
 
