@@ -8,6 +8,8 @@ def check_if_login(request):
     """
     :type request: HttpRequest
     """
+    if 'uID' in request.session and request.session['uID'] != '' and not BadgeUser.objects.filter(id=request.session['uID']).exists():
+        del request.session['uID']
     if 'pw' in request.POST and 'mail' in request.POST:
         if BadgeUser.objects.filter(email=request.POST['mail']).exists():
             bu = BadgeUser.objects.filter(email=request.POST['mail'])[0]
@@ -19,6 +21,20 @@ def check_if_login(request):
             if request.GET['sKey']: handle_login(request)
             else: return handle_logout(request)
         else: handle_logout(request)
+
+
+def get_loggedin_user(request):
+    return BadgeUser.objects.get(id=request.session['uID'])
+
+
+def is_logged_in(request):
+    """
+    :type request: HttpRequest
+    """
+    if 'uID' in request.session and request.session['uID'] != '':
+        return True
+    else:
+        return False
 
 
 def authenticate(request):

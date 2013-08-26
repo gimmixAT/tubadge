@@ -4,7 +4,7 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from BadgePortfolio.models import *
-from login_handler import check_if_login
+from login_handler import *
 from random import choice
 import logging
 
@@ -29,14 +29,14 @@ def badges(request):
     """
     check_if_login(request)
     if 'uid' in request.GET:
-        content = { 'badges': Badge.objects.filter(awardee=request.GET['uid'], public=True) }
+        content = {'badges': Badge.objects.filter(awardee=request.GET['uid'], public=True)}
         content.update(get_header_content(request))
 
         return render_to_response(
             'badges.html',
             content
         )
-    elif 'uID' in request.session:
+    elif is_logged_in(request):
         content = {'badges': Badge.objects.filter(awardee=request.session['uID'])}
         content.update(get_header_content(request))
 
@@ -54,11 +54,15 @@ def presets(request):
     :param request:
     :return:
     """
-    if request.user.is_authenticated() and request.user.has_perm(Permission.objects.get(codename='can_have_presets')):
-        content = {'presets': BadgePreset.objects.filter(owner=request.user.id)}
-        content.update(get_header_content(request))
+    if is_logged_in(request):
+        bu = get_loggedin_user(request)
+        if bu.role is BadgeUser.PROFESSOR:
+            content = {'presets': BadgePreset.objects.filter(owner=bu.id)}
+            content.update(get_header_content(request))
 
-        return render_to_response('presets.html', content)
+            return render_to_response('presets.html', content)
+        else:
+            return badges(request)
     else:
         return login(request)
 
@@ -67,7 +71,7 @@ def get_header_content(request):
     content = {}
 
     if 'uID' in request.session:
-        bu = BadgeUser.objects.get(id=request.session['uID'])
+        bu = get_loggedin_user(request)
         content['username'] = bu.firstname+' '+bu.lastname
         if bu.role == BadgeUser.PROFESSOR:
             content['prof'] = True

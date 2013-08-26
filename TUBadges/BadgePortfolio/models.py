@@ -1,7 +1,9 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import (check_password, make_password, is_password_usable)
 from django.core.exceptions import ValidationError
+import re
 
 
 class Tag(models.Model):
@@ -39,12 +41,44 @@ class BadgeUser(models.Model):
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
 
+    def get_matching_user(self, query):
+        """
+        :type query: String
+        """
+        #check if the query may be an email address
+        if query.find('@') >= 0:
+            if BadgeUser.objects.exists(email__iexact=query):
+                return BadgeUser.objects.get(email__iexact=query)
+
+        #check if the query may be a studentID
+        if re.match('^[0-9]{7}$', query, re.IGNORECASE):
+            if BadgeUser.objects.exists(studentID=query):
+                return BadgeUser.objects.get(studentID=query)
+
+        parts = query.split(' ', 2)
+        if len(parts) is 2:
+            if BadgeUser.objects.exists(firstname__iexact=parts[0], lastname__iexact=parts[1]):
+                return BadgeUser.objects.get(firstname__iexact=parts[0], lastname__iexact=parts[1])
+
+        return None
+
+    def get_matching_users(self, query):
+        """
+        :type query: String
+        """
+        parts = query.split(' ', 2)
+        if len(parts) is 2:
+            return BadgeUser.objects.get(Q(email__icontains=query) | Q(studentID__contains=query) | (Q(firstname__icontains=parts[0]) & Q(lastname__icontains=parts[1])))
+        else:
+            return BadgeUser.objects.get(Q(email__icontains=query) | Q(studentID__contains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query) )
+
+
     def __unicode__(self):
         return self.firstname+" "+self.lastname+" ("+self.email+")"
 
 
 class BadgePreset(models.Model):
-    owner = models.ForeignKey(User, related_name='badge_presets')
+    owner = models.ForeignKey(BadgeUser, related_name='badge_presets')
     name = models.CharField(max_length=200)
     img = models.CharField(max_length=200)
     keywords = models.ManyToManyField(Tag)
@@ -64,8 +98,8 @@ class Badge(models.Model):
         (SILVER, 'Silber'),
         (BRONZE, 'Bronze')
     )
-    awardee = models.EmailField()
-    issuer = models.ForeignKey(User, related_name='issued_badges')
+    awardee = models.ForeignKey(BadgeUser, related_name='my_badges')
+    issuer = models.ForeignKey(BadgeUser, related_name='issued_badges')
     awarder = models.CharField(max_length=200)
     preset = models.ForeignKey(BadgePreset)
     rating = models.PositiveIntegerField(choices=BADGE_VALUE, default=BRONZE)
