@@ -8,6 +8,8 @@ $(function(){
             masonry: { columnWidth: getColumnWidth(1) }
         });
     });
+
+    resizeFormElements($('.modal'));
 });
 
 $(window).smartresize(function(){
@@ -35,4 +37,49 @@ function getColumnWidth(cols){
     console.log(w + ' -> ' + out);
 
     return out;
+}
+
+function resizeFormElements(target){
+
+    target.find('input.autosize').each(function(){
+        var _this = this;
+        var font = {
+            'font-family' : $(this).css('font-family'),
+            'font-weight' : $(this).css('font-weight'),
+            'font-size' : $(this).css('font-size'),
+            'line-height' : $(this).css('line-height'),
+            'display' : 'block',
+            'position' : 'absolute',
+            'top' : 0,
+            'white-space' : 'pre'
+        }
+
+        $(this).on('change input keydown keyup', function(e){
+            var t = $('<div>'+ e.target.value+'</div>').css(font).appendTo('body');
+            $(_this).css('width', t.width()+10);
+            t.remove();
+        }).change();
+    });
+
+    target.find('textarea.autosize').each(function(){
+        var _this = this;
+        var font = {
+            'font-family' : $(this).css('font-family'),
+            'font-weight' : $(this).css('font-weight'),
+            'font-size' : $(this).css('font-size'),
+            'line-height' : $(this).css('line-height'),
+            'display' : 'block',
+            'position' : 'absolute',
+            'top' : 0,
+            'width' : $(this).width()
+        }
+        console.log(font);
+        $(this).on('change input keydown keyup', function(e){
+            var t = $('<div class="pre">'+ e.target.value+'&nsbp;</div>').css(font).appendTo('body');
+            $(_this).css('height', t.height()+11);
+            //console.log(t.height());
+            t.remove();
+        }).change();
+    });
+
 }
