@@ -5,6 +5,11 @@ html, body, div, ul, li, p, span {
 
 input, select, textarea, button{font-family:inherit;}
 
+html, body {
+    min-height:100%;
+    position:relative
+}
+
 body {
     background-color:#f0f0f0;
     font-family:'Open Sans', sans-serif;
@@ -161,7 +166,21 @@ a {
         top:0;
         left:0;
         z-index:1;
+        color: #111111;
+        line-height: normal;
     }
+
+        .badge.inline {
+            width: auto;
+            position: static;
+            display: block-inline;
+            margin:10px 0 10px 0;
+        }
+
+        .badge.hor {
+            overflow: hidden;
+            max-height: 150px;
+        }
 
         .col .badge {
             width:31.5%;
@@ -176,6 +195,13 @@ a {
             background-color: #cccccc;
             overflow: hidden;
         }
+
+            .badge.hor .image {
+                width: 130px;
+                height: 130px;
+                margin-right: 3%;
+                float: left;
+            }
 
             .badge.gold .image {
                 background-color: #ffcc00;
@@ -205,6 +231,7 @@ a {
             .badge .info .label{
                 color:#999999;
             }
+
 
         .badge ul.actions {
             width:100%;
@@ -355,7 +382,7 @@ a {
                     }
 
 
-    input, textarea {
+    input, textarea, select {
         font-size:18px;
         color:#111111;
         padding:5px;
@@ -373,11 +400,15 @@ a {
         height: 36px;
     }
 
+    select {
+        padding:5px 5px 5px 0;
+    }
+
     textarea {
         resize:vertical;
     }
 
-        input.autosize {
+        input.autosize, select.autosize {
             width:auto;
         }
 
@@ -430,26 +461,23 @@ a {
         }
 
 .modal{
-    position: fixed;
-    z-index: 30;
+    position: absolute;
+    z-index: 10;
     left: 0;
     right: 0;
     top: 0;
-    bottom: 0;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
     background-color:rgba(240,240,240,0.65);
     overflow: hidden;
 }
 
-    .modal .box {
-        overflow-x: hidden;
-        overflow-y: auto;
-        margin: auto;
-        position: relative;
-        top: 15%;
+    .modal .contentbox {
+        background-color:#ffffff;
+        overflow:hidden;
+        margin: 120px auto 50px auto;
         width: 70%;
-        height: 70%;
+        max-width:700px;
         -moz-box-shadow: 5px 5px 10px rgba(0,0,0,0.11);
         -webkit-box-shadow: 5px 5px 10px rgba(0,0,0,0.11);
         box-shadow: 5px 5px 10px rgba(0,0,0,0.11);
@@ -485,13 +513,24 @@ a {
             float: left;
         }
 
+    .modal span.select {
+        display: block;
+        overflow: hidden;
+        padding: 4px 4px 0 6px;
+        height: 36px;
+    }
+
+        .modal span.select.autosize {
+            float: left;
+        }
+
     .modal span.textarea {
         display: block;
         overflow: visible;
         clear: both;
     }
 
-    .modal input {
+    .modal input, .modal select{
         margin: 0;
     }
 
@@ -543,6 +582,11 @@ a {
         margin: 0 5%
     }
 
+    .modal .contentbox {
+        margin: 100px auto 50px auto;
+        width: 90%;
+    }
+
 }
 
 @media (max-width: 769px){
@@ -580,6 +624,10 @@ a {
     #container{
         width: 100%;
         margin: 0;
+    }
+
+    .modal .contentbox {
+        width: 100%;
     }
 }
 
