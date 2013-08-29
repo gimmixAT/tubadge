@@ -1,3 +1,28 @@
-<div class="box">
+            <h1>Badge vergeben</h1>
+            <div>
+                <label for="awardee">Der Student </label><span class="input"><input name="awardee" id="awardee" value="" placeholder="Matrikelnummer"/></span>
+                <label for="lva">hat in</label><span class="input"><input name="lva" id="lva" value="" placeholder="LVA 123.456 Lehrveranstaltung"/></span>
+                <label for="proof">die folgende Leistung erbracht:</label><br/>
+                <span class="textarea"><textarea name="proof" id="proof" placeholder="URL oder kurze Beschreibung" rows="1" class="autosize"></textarea></span>
+                <label for="type">und erhält dafür den</label> <span class="select autosize"><select name="type" id="type" class="autosize"><option value="0">bronzenen</option><option value="1">silbernen</option><option value="2">goldenen</option></select></span> Badge<br/>
 
-</div>
+                <div class="badge box inline hor">
+                    <div class="image"><img src="{% static "images/badge.png" %}" alt="badge image"/></div>
+                    <h2>Ein toller Badge</h2>
+                    <div class="tags">
+                        <span class="label">Schlagworte</span>
+                        <a href="#tag">Tag 1</a>, <a href="#tag2">Tag 2</a>, <a href="#tag3">Tag 3</a>,
+                    </div>
+                </div>
+
+                <label for="awarder">von</label><span class="input autosize"><input name="awarder" id="awarder" value="Max Mustermann" placeholder="" class="autosize"/></span> <span class="opt issuer">via <span class="value">Max Mustermann</span></span><br/>
+                <label for="comment">mit folgendem Kommentar:</label>
+                <span class="textarea"><textarea name="comment" id="comment" placeholder="" rows="1" class="autosize"></textarea></span>
+
+                <div class="buttongroup">
+                    <input type="button" value="&raquo; Badge vergeben" />
+                    <input type="button" class="cancel" value="&raquo;  Abbrechen" />
+                    <input type="button" class="small clear" value="&raquo; Badge und weiteren vergeben" />
+                </div>
+
+            </div>

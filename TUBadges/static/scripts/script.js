@@ -10,6 +10,7 @@ $(function(){
     });
 
     resizeFormElements($('.modal'));
+    watchBadgeTypeChange($('.modal'));
 });
 
 $(window).smartresize(function(){
@@ -73,13 +74,22 @@ function resizeFormElements(target){
             'top' : 0,
             'width' : $(this).width()
         }
-        console.log(font);
+
         $(this).on('change input keydown keyup', function(e){
             var t = $('<div class="pre">'+ e.target.value+'&nsbp;</div>').css(font).appendTo('body');
             $(_this).css('height', t.height()+11);
-            //console.log(t.height());
             t.remove();
         }).change();
     });
 
+}
+
+function watchBadgeTypeChange(target){
+    target.find('select').change(function(e){
+        switch($(e.target).val()){
+            case '0': target.find('.badge').removeClass('bronze silver gold').addClass('bronze'); break;
+            case '2': target.find('.badge').removeClass('bronze silver gold').addClass('gold'); break;
+            default: target.find('.badge').removeClass('bronze silver gold').addClass('silver'); break;
+        }
+    });
 }

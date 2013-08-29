@@ -50,6 +50,18 @@ a {
         margin-right:0;
     }
 
+.col-3 {
+    width: 30%;
+    margin:0 5% 0 0;
+    display: block;
+    float:left;
+}
+
+    .col-3:nth-child(3n) {
+        margin-right:0;
+    }
+
+
 .clear{
     clear:both;
 }
@@ -228,10 +240,18 @@ a {
             color:#333333;
         }
 
-            .badge .info .label{
+        .badge .tags {
+            font-size: 13px;
+            color: #0070af;
+        }
+
+            .badge .info .label, .badge .tags .label{
                 color:#999999;
             }
 
+            .badge.hor .tags .label{
+                display: block;
+            }
 
         .badge ul.actions {
             width:100%;
@@ -416,6 +436,11 @@ a {
             resize:none;
         }
 
+    .buttongroup {
+        float: right;
+        margin: 15px 0 0 0;
+    }
+        
     input[type="button"], input[type="submit"] {
         background:#ffffff;
         color:#0070af;
@@ -428,10 +453,33 @@ a {
         float:right;
     }
 
-    input[type="button"]:hover, input[type="submit"]:hover {
-        text-shadow: 0px 2px 0px #ffffff, 2px 2px 0px #ffffff, -2px 2px 0px #ffffff;
-        box-shadow: inset 0px -8px 0px #ffffff, inset 0px -10px 0px #0070af;
-    }
+        input[type="button"].cancel{
+            color:#999999;
+        }
+
+        input[type="button"].small{
+            font-weight: 400;
+            font-size: 16px;
+        }
+
+        input[type="button"]:hover, input[type="submit"]:hover {
+            text-shadow: 0px 2px 0px #ffffff, 2px 2px 0px #ffffff, -2px 2px 0px #ffffff;
+            box-shadow: inset 0px -6px 0px #ffffff, inset 0px -8px 0px #0070af;
+        }
+
+        input[type="button"].cancel:hover {
+            box-shadow: inset 0px -6px 0px #ffffff, inset 0px -8px 0px #999999;
+        }
+
+        input[type="button"].small:hover {
+            text-shadow: 0px -1px 0px #ffffff, 0px 1px 0px #ffffff, 1px 1px 0px #ffffff, -1px 1px 0px #ffffff;
+            box-shadow: inset 0px -7px 0px #ffffff, inset 0px -8px 0px #0070af;
+        }
+
+        .buttongroup input[type="button"], .buttongroup  input[type="submit"] {
+            float: left;
+            margin-left: 15px;
+        }
 
     div.box.login {
         width:100%;
@@ -502,6 +550,12 @@ a {
         clear: both;
     }
 
+    .modal .axisform label {
+        width: 120px;
+        text-align: right;
+        margin: 0 20px 0 0;
+    }
+
     .modal span.input {
         display: block;
         overflow: hidden;
@@ -530,6 +584,17 @@ a {
         clear: both;
     }
 
+        .modal span.textarea.inline {
+            display: block;
+            overflow: hidden;
+            padding: 5px 4px 0 6px;
+            clear: none;
+        }
+
+            .modal span.textarea.inline > textarea {
+                margin: 0;
+            }
+
     .modal input, .modal select{
         margin: 0;
     }
@@ -539,7 +604,78 @@ a {
     }
 
 
+.badgecreator {
+    margin: 10px 0 20px 0;
+}
 
+    .badgecreator .preview {
+        border-radius: 50%;
+        overflow: hidden;
+        position: relative;
+        line-height: 0;
+    }
+
+        .badgecreator .preview > img {
+            width: 100%;
+            height: auto;
+        }
+
+        .badgecreator .preview .bg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            background: #cccccc;
+        }
+
+            .badgecreator .preview .bg.cubes {
+                background: url('./images/patterns/cubes.png') 0 0 / 30% auto;
+            }
+            .badgecreator .preview .bg.carbon {
+                background: url('./images/patterns/carbon.png') 0 0 / 10% auto;
+            }
+            .badgecreator .preview .bg.carbon_white {
+                background: url('./images/patterns/carbon_white.png') 0 0 / 5% auto;
+            }
+            .badgecreator .preview .bg.checker {
+                background: url('./images/patterns/checker.png') 0 0 / 15% auto;
+            }
+            .badgecreator .preview .bg.chevrons {
+                background: url('./images/patterns/chevrons.png') 0 0 / 28% auto;
+            }
+            .badgecreator .preview .bg.dots {
+                background: url('./images/patterns/dots.png') 0 0 / 3% auto;
+            }
+            .badgecreator .preview .bg.halfrhombes {
+                background: url('./images/patterns/halfrhombes.png') 0 0 / 10% auto;
+            }
+            .badgecreator .preview .bg.microbialmat {
+                background: url('./images/patterns/microbialmat.png') 0 0 / 10% auto;
+            }
+            .badgecreator .preview .bg.shippo {
+                background: url('./images/patterns/shippo.png') 0 0 / 20% auto;
+            }
+            .badgecreator .preview .bg.stripes {
+                background: url('./images/patterns/stripes_diagonal.png') 0 0 / 40% auto;
+            }
+            .badgecreator .preview .bg.wave {
+                background: url('./images/patterns/wave.png') 0 0 / 10% auto;
+            }
+
+        .badgecreator .preview .fg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+        }
+
+    .badgecreator h2 {
+        font-size:18px;
+        font-weight: 400;
+        margin: 0;
+        padding: 0;
+        line-height: normal;
+    }
 
 
 
