@@ -618,6 +618,8 @@ a {
         .badgecreator .preview > img {
             width: 100%;
             height: auto;
+            position: relative;
+            z-index: 2;
         }
 
         .badgecreator .preview .bg {

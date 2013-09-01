@@ -21,6 +21,8 @@ urlpatterns = patterns('',
     url(r'^$', 'BadgePortfolio.views.badges'),
     url(r'^presets/$', 'BadgePortfolio.views.presets'),
 
+    url(r'^svg$', 'BadgePortfolio.svg.build_svg'),
+
     url(r'^ajax/issueform$', 'BadgePortfolio.ajax.issue_badge_form'),
     url(r'^ajax/issue$', 'BadgePortfolio.ajax.issue_badge'),
     url(r'^ajax/presetform$', 'BadgePortfolio.ajax.badge_preset_form'),

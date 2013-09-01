@@ -8,6 +8,7 @@ from login_handler import *
 from random import choice
 from django.core.serializers import serialize
 import logging
+import re
 
 
 def issue_badge_form(request):
