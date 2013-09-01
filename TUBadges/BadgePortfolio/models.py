@@ -72,9 +72,14 @@ class BadgeUser(models.Model):
         else:
             return BadgeUser.objects.get(Q(email__icontains=query) | Q(studentID__contains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query) )
 
-
     def __unicode__(self):
         return self.firstname+" "+self.lastname+" ("+self.email+")"
+
+    def credibility(self, rating):
+        bc = self.issued_badges.filter(rating=rating).count()
+        tbc = self.issued_badges.count()
+        return 1 - pow((float(bc) / float(tbc)), Badge.factor[self.value])
+
 
 
 class BadgePreset(models.Model):
@@ -101,7 +106,7 @@ class Badge(models.Model):
     awardee = models.ForeignKey(BadgeUser, related_name='my_badges')
     issuer = models.ForeignKey(BadgeUser, related_name='issued_badges')
     awarder = models.CharField(max_length=200)
-    preset = models.ForeignKey(BadgePreset)
+    preset = models.ForeignKey(BadgePreset, related_name='issued_badges')
     rating = models.PositiveIntegerField(choices=BADGE_VALUE, default=BRONZE)
     name = models.CharField(max_length=200)
     img = models.CharField(max_length=200)
@@ -109,3 +114,17 @@ class Badge(models.Model):
     proof_url = models.URLField()
     lva = models.ForeignKey(LVA, related_name='awarded_badges')
     public = models.BooleanField(default=False)
+    candidates = models.IntegerField()
+
+    def rarity(self):
+        c = 1
+        if self.preset is not None:
+            c = self.preset.issued_badges.count()
+
+        return 1 - pow(float(c) / float(self.candidates), Badge.factor[self.rating]);
+
+    def value(self):
+        self.issuer.credibility(self.rating)
+
+    def factor(self, rating):
+        return [2, 1, 0.5][rating]

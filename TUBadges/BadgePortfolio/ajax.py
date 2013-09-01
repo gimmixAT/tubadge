@@ -46,12 +46,17 @@ def badge_preset_form(request):
         if bu.role is BadgeUser.PROFESSOR:
             if 'pid' in request.GET and request.GET['pid'] != '' and BadgePreset.objects.exists(id=request.GET['pid']):
                 bp = BadgePreset.objects.get(id=request.GET['pid'])
-                content.update({
-                    'name': bp.name,
-                    'img': bp.img,
-                    'keywords': bp.keywords
-                })
-            return render_to_response('badge_preset_form.html', content)
+                if bp.issued_badges.count() is 0:
+                    content.update({
+                        'name': bp.name,
+                        'img': bp.img,
+                        'keywords': bp.keywords
+                    })
+                    return render_to_response('badge_preset_form.html', content)
+                else:
+                    return render_to_response('error.html', {'msg': 'Das Badge Preset wurde bereits verwendet und kann nicht mehr editiert werden.'})
+            else:
+                return render_to_response('error.html', {'msg': 'Das Badge Preset existiert nicht.'})
         else:
             return render_to_response('error.html', {'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'})
     else:
@@ -64,8 +69,96 @@ def issue_badge(request):
     :type request: HttpRequest
     """
     result = {}
-    #check if a user id is given
-        #if no user id is given check if the name is a studentID and create a new user
+    awardee = None
+    if is_logged_in(request):
+        bu = get_loggedin_user(request)
+        if bu.role is BadgeUser.PROFESSOR:
+            if 'awardee_id' in request.GET:
+                #if a user id is given
+                awardee = BadgeUser.objects.get(id=request.GET['awardee_id'])
+            elif 'awardee' in request.GET:
+                # if no user id is given check if the name is a studentID and
+                # create a new user if the studentID isn't already in use
+                if re.match('^[0-9]{7}$', request.GET['awardee'], re.IGNORECASE):
+                    if BadgeUser.objects.exists(studentID=request.GET['awardee']):
+                        awardee = BadgeUser.objects.get(studentID=request.GET['awardee'])
+
+                    if awardee is None:
+                        awardee = BadgeUser()
+                        awardee.student_id = request.GET['awardee']
+                        awardee.save()
+                else:
+                    result = {
+                        'error': True,
+                        'msg': 'Ung&uuml;tiger Badge empf&auml;nger.'
+                    }
+            else:
+                result = {
+                    'error': True,
+                    'msg': 'Es fehlt ein Parameter'
+                }
+
+            if awardee is not None:
+                #issue badge
+                b = None
+                if 'pid' in request.GET and BadgePreset.objects.exists(id=request.GET['pid']):
+                    bp = BadgePreset.objects.get(id=request.GET['pid'])
+                    if bp.owner is bu.id:
+                        b = Badge()
+                        b.name = bp.name
+                        b.keywords = bp.keywords
+                        b.img = bp.img
+                        b.preset = bp
+                    else:
+                        result = {
+                            'error': True,
+                            'msg': 'Sie haben nicht die n&ouml;tigen Rechte um dieses Badge Preset zu verwenden.'
+                        }
+                elif 'name' in request.GET and 'img' in request.GET:
+                    b = Badge()
+                    b.name = request.GET['name']
+                    b.img = request.GET['img']
+                else:
+                    result = {
+                        'error': True,
+                        'msg': 'Es fehlt ein Parameter'
+                    }
+
+                if b is not None:
+#TODO: sanity checking GET
+                    if 'keywords' in request.GET:
+                        b.keywords += request.GET['keywords']
+
+                    b.awardee = awardee
+
+                    if 'awarder' in request.GET:
+                        b.awarder = request.GET['awarder']
+                    else:
+                        b.awarder = bu.id
+
+                    b.rating = request.GET['rating']
+                    b.issuer = bu
+                    b.candidates = request.GET['candidates']
+                    b.proof_url = request.GET['proof']
+                    b.lva = request.GET['lva']
+
+                    b.save()
+
+                    result = {
+                        'error': False,
+                        'id': b.id
+                    }
+        else:
+            result = {
+                'error': True,
+                'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'
+            }
+    else:
+        result = {
+            'error': True,
+            'msg': 'Sie m&uuml;ssen eingeloggt sein.'
+        }
+
     return HttpResponse(serialize('json', result), content_type="application/json")
 
 
@@ -74,7 +167,108 @@ def save_badge_preset(request):
     Saves the requested badge preset and returns a JSON response
     :type request: HttpRequest
     """
-    result = {}
+    result = {'error': True, 'msg': ''}
+
+    if is_logged_in(request):
+        bu = get_loggedin_user(request)
+        if bu.role is BadgeUser.PROFESSOR:
+            bp = None
+            if 'pid' in request.GET and request.GET['pid'] != '':
+                if BadgePreset.objects.exists(id=request.GET['pid']):
+                    bp = BadgePreset.objects.get(id=request.GET['pid'])
+                    if bp.owner.id is not get_loggedin_user().id:
+                        bp = None
+                        result = {
+                            'error': True,
+                            'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'
+                        }
+                else:
+                    result = {
+                        'error': True,
+                        'msg': 'Badge Preset existiert nicht.'
+                    }
+            else:
+                bp = BadgePreset()
+                bp.owner = get_loggedin_user()
+
+            if bp is not None:
+                if bp.issued_badges.count() is 0:
+                    if 'name' in request.GET:
+                        bp.name = request.GET['name']
+                    if 'img' in request.GET:
+                        bp.img = request.GET['img']
+                    if 'keywords' in request.GET:
+                        bp.keywords = request.GET['keywords']
+                    bp.save()
+                    result = {
+                        'error': False,
+                        'id': bp.id
+                    }
+                else:
+                    result = {
+                        'error': True,
+                        'msg': 'Das Badge Preset wurde bereits verwendet und kann nicht mehr editiert werden.',
+                        'id': bp.id
+                    }
+        else:
+            result = {
+                'error': True,
+                'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'
+            }
+    else:
+        result = {
+            'error': True,
+            'msg': 'Sie m&uuml;ssen eingeloggt sein.'
+        }
+
+    return HttpResponse(serialize('json', result), content_type="application/json")
+
+
+def duplicate_badge_preset(request):
+    """
+    Tries to duplicate the requested badge preset and returns a JSON response
+    :type request: HttpRequest
+    """
+    result = {'error': True, 'msg': ''}
+
+    if is_logged_in(request):
+        bu = get_loggedin_user(request)
+        if bu.role is BadgeUser.PROFESSOR:
+            if 'pid' in request.GET and request.GET['pid'] != '' and BadgePreset.objects.exists(id=request.GET['pid']):
+                bp = BadgePreset.objects.get(id=request.GET['pid'])
+                if bp.owner.id is get_loggedin_user().id:
+                    bpn = BadgePreset()
+                    bpn.name = bp.name + "*"
+                    bpn.img = bp.img
+                    bpn.keywords = bp.keywords
+                    bpn.owner = bp.owner
+                    bpn.save()
+
+                    result = {
+                        'error': False,
+                        'id': bpn.id
+                    }
+                else:
+                    result = {
+                        'error': True,
+                        'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'
+                    }
+            else:
+                result = {
+                    'error': True,
+                    'msg': 'Badge Preset existiert nicht.'
+                }
+        else:
+            result = {
+                'error': True,
+                'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'
+            }
+    else:
+        result = {
+            'error': True,
+            'msg': 'Sie m&uuml;ssen eingeloggt sein.'
+        }
+
     return HttpResponse(serialize('json', result), content_type="application/json")
 
 
@@ -86,7 +280,7 @@ def toggle_public(request):
     if is_logged_in(request):
         if 'bid' in request.GET and request.GET['bid'] != '' and Badge.objects.exists(id=request.GET['bid']):
             badge = Badge.objects.get(id=request.GET['bid'])
-            if badge.awardee.id == request.session['uID']:
+            if badge.awardee.id == get_loggedin_user().id:
                 badge.public = not badge.public
                 badge.save()
                 result = {'error': False, 'msg': 'Erfolgreich gespeichert.', 'public': badge.public}
