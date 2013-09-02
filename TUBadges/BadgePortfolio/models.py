@@ -14,7 +14,8 @@ class LVA(models.Model):
     institute = models.PositiveIntegerField(max_length=3)
     number = models.PositiveIntegerField(max_length=3)
     title = models.CharField(max_length=300)
-    tutors = models.ManyToManyField(User)
+    tutors = models.ManyToManyField(BadgeUser)
+    students = models.IntegerField()
 
     class Meta:
         unique_together = ('institute', 'number')

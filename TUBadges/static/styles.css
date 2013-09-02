@@ -679,6 +679,61 @@ a {
         line-height: normal;
     }
 
+    .badgecreator .shapes > li {
+        list-style:none;
+        display: block;
+        float: left;
+        width:18%;
+        margin:7% 7% 0 0;
+        padding:0;
+        line-height: 0;
+    }
+
+        .badgecreator .shapes > li > img {
+            width:100%;
+            height:auto;
+        }
+
+    .badgecreator .patterns > li {
+        list-style:none;
+        display: block;
+        float: left;
+        width:18%;
+        margin:7% 7% 0 0;
+        padding:0;
+        line-height: 0;
+        position: relative;
+    }
+
+        .badgecreator .patterns > li > img {
+            width:100%;
+            height:auto;
+        }
+
+        .badgecreator .patterns > li > a {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+            border:2px solid #cccccc;
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+            .badgecreator .patterns > li > a:hover {
+                width:200%;
+                top: -50%;
+                left: -50%;
+                z-index: 2;
+            }
+
+            .badgecreator .patterns > li > a > img {
+                width:100%;
+                height:auto;
+            }
+
 
 
 

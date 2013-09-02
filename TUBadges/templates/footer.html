@@ -8,17 +8,25 @@
                 <div class="preview col-3">
                     <div class="bg"></div>
                     <div class="fg"></div>
-                    <img src="/svg?p=stripes_diagonal&s=genius&c=ffcc00" />
+                    <img src="/svg?p=carbon&s=genius&c=ffcc00" />
                 </div>
 
                 <div class="col-3">
                     <h2>Symbol</h2>
-                    <ul class="synmbols"></ul>
+                    <ul class="shapes">
+                        {% for s in shapes %}
+                        <li><img src="{% static s %}" /></li>
+                        {% endfor %}
+                    </ul>
                 </div>
 
                 <div class="col-3">
                     <h2>Muster</h2>
-                    <ul class="patterns"></ul>
+                    <ul class="patterns">
+                        {% for p in patterns %}
+                        <li><a href="#"><img src="{{ p }}" /></a><img src="{% static 'images/blank.png' %}" /></li>
+                        {% endfor %}
+                    </ul>
                 </div>
                 <div class="clear"></div>
             </div>

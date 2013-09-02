@@ -4,6 +4,7 @@ from xml.dom import minidom
 from django.template import loader, Context
 import re
 
+
 def build_svg(request):
     """
     :type request: HttpRequest
@@ -22,8 +23,8 @@ def build_svg(request):
     if 'c' in request.GET:
         color = '#'+request.GET['c']
 
-    pattern_dom = minidom.parse('./static/images/patterns/'+pattern+'.svg')
-    shape_dom = minidom.parse('./static/images/shapes/'+shape+'.svg')
+    pattern_dom = minidom.parse('static/images/patterns/'+pattern+'.svg')
+    shape_dom = minidom.parse('static/images/shapes/'+shape+'.svg')
     pattern_root = pattern_dom.documentElement;
     shape_root = shape_dom.documentElement;
 
@@ -37,6 +38,32 @@ def build_svg(request):
     }
 
     t = loader.get_template('svg_base.svg')
+    cont = Context(content)
+    rendered = t.render(cont)
+
+    return  HttpResponse(rendered, content_type="image/svg+xml")
+
+
+def build_bg_svg(request):
+    """
+    :type request: HttpRequest
+    """
+
+    pattern = 'checker'
+
+    if 'p' in request.GET:
+        pattern = request.GET['p']
+
+    pattern_dom = minidom.parse('static/images/patterns/'+pattern+'.svg')
+    pattern_root = pattern_dom.documentElement;
+
+    content = {
+        'pattern': pattern_root.toxml(),
+        'pattern_width': pattern_root.getAttribute('width'),
+        'pattern_height': pattern_root.getAttribute('height')
+    }
+
+    t = loader.get_template('svg_bgpreview.svg')
     cont = Context(content)
     rendered = t.render(cont)
 

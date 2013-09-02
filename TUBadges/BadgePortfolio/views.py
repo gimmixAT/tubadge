@@ -6,6 +6,8 @@ from django.core.context_processors import csrf
 from BadgePortfolio.models import *
 from login_handler import *
 from random import choice
+import os
+from os.path import isfile, join, isdir
 import logging
 
 logger = logging.getLogger(__name__)
@@ -39,6 +41,23 @@ def badges(request):
     elif is_logged_in(request):
         content = {'badges': Badge.objects.filter(awardee=request.session['uID'])}
         content.update(get_header_content(request))
+
+        shapes = []
+        shape_path = 'static/images/shapes/'
+        for s in os.listdir(shape_path):
+            if isfile(join(shape_path, s)):
+                shapes.append(join('images/shapes/', s))
+
+        patterns = []
+        pattern_path = 'static/images/patterns/'
+        for p in os.listdir(pattern_path):
+            if isfile(join(pattern_path, p)):
+                patterns.append('bgsvg?p='+p.replace('.svg', ''))
+
+        content.update({
+            'shapes': shapes,
+            'patterns': patterns
+        })
 
         return render_to_response(
             'badges.html',
