@@ -613,6 +613,7 @@ a {
         overflow: hidden;
         position: relative;
         line-height: 0;
+        margin-top: 16px;
     }
 
         .badgecreator .preview > img {
@@ -630,40 +631,6 @@ a {
             background: #cccccc;
         }
 
-            .badgecreator .preview .bg.cubes {
-                background: url('./images/patterns/cubes.png') 0 0 / 30% auto;
-            }
-            .badgecreator .preview .bg.carbon {
-                background: url('./images/patterns/carbon.png') 0 0 / 10% auto;
-            }
-            .badgecreator .preview .bg.carbon_white {
-                background: url('./images/patterns/carbon_white.png') 0 0 / 5% auto;
-            }
-            .badgecreator .preview .bg.checker {
-                background: url('./images/patterns/checker.png') 0 0 / 15% auto;
-            }
-            .badgecreator .preview .bg.chevrons {
-                background: url('./images/patterns/chevrons.png') 0 0 / 28% auto;
-            }
-            .badgecreator .preview .bg.dots {
-                background: url('./images/patterns/dots.png') 0 0 / 3% auto;
-            }
-            .badgecreator .preview .bg.halfrhombes {
-                background: url('./images/patterns/halfrhombes.png') 0 0 / 10% auto;
-            }
-            .badgecreator .preview .bg.microbialmat {
-                background: url('./images/patterns/microbialmat.png') 0 0 / 10% auto;
-            }
-            .badgecreator .preview .bg.shippo {
-                background: url('./images/patterns/shippo.png') 0 0 / 20% auto;
-            }
-            .badgecreator .preview .bg.stripes {
-                background: url('./images/patterns/stripes_diagonal.png') 0 0 / 40% auto;
-            }
-            .badgecreator .preview .bg.wave {
-                background: url('./images/patterns/wave.png') 0 0 / 10% auto;
-            }
-
         .badgecreator .preview .fg {
             width: 100%;
             height: 100%;
@@ -679,6 +646,16 @@ a {
         line-height: normal;
     }
 
+    .badgecreator .browse {
+        position: absolute;
+        right:7%;
+        top: -10px;
+    }
+
+        .badgecreator .browse .page {
+            font-size: 12px;
+        }
+
     .badgecreator .shapes > li {
         list-style:none;
         display: block;
@@ -687,12 +664,31 @@ a {
         margin:7% 7% 0 0;
         padding:0;
         line-height: 0;
+        position: relative;
     }
 
-        .badgecreator .shapes > li > img {
+        .badgecreator .shapes > li > a{
             width:100%;
-            height:auto;
+            height: auto;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.5;
         }
+
+            .badgecreator .shapes > li > a:hover{
+                opacity: 1;
+                width:200%;
+                top: -50%;
+                left: -50%;
+                z-index: 2;
+            }
+
+            .badgecreator .shapes > li > a > img {
+                width:100%;
+                height:auto;
+            }
 
     .badgecreator .patterns > li {
         list-style:none;
@@ -705,7 +701,7 @@ a {
         position: relative;
     }
 
-        .badgecreator .patterns > li > img {
+        .badgecreator .patterns > li > img, .badgecreator .shapes > li > img {
             width:100%;
             height:auto;
         }
@@ -738,7 +734,7 @@ a {
 
 
 
-/* Liquid rules */
+/* responsive rules */
 
 @media (max-width: 1200px){
     .badge {

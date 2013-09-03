@@ -10,17 +10,6 @@ class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
 
-class LVA(models.Model):
-    institute = models.PositiveIntegerField(max_length=3)
-    number = models.PositiveIntegerField(max_length=3)
-    title = models.CharField(max_length=300)
-    tutors = models.ManyToManyField(BadgeUser)
-    students = models.IntegerField()
-
-    class Meta:
-        unique_together = ('institute', 'number')
-
-
 class BadgeUser(models.Model):
     STUDENT = 'stud'
     PROFESSOR = 'prof'
@@ -81,6 +70,16 @@ class BadgeUser(models.Model):
         tbc = self.issued_badges.count()
         return 1 - pow((float(bc) / float(tbc)), Badge.factor[self.value])
 
+
+class LVA(models.Model):
+    institute = models.PositiveIntegerField(max_length=3)
+    number = models.PositiveIntegerField(max_length=3)
+    title = models.CharField(max_length=300)
+    tutors = models.ManyToManyField(BadgeUser)
+    students = models.IntegerField()
+
+    class Meta:
+        unique_together = ('institute', 'number')
 
 
 class BadgePreset(models.Model):

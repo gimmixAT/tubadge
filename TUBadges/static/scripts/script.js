@@ -11,6 +11,10 @@ $(function(){
 
     resizeFormElements($('.modal'));
     watchBadgeTypeChange($('.modal'));
+
+    $('.slider').each(function(){
+        setupSlider($(this));
+    });
 });
 
 $(window).smartresize(function(){
@@ -92,4 +96,53 @@ function watchBadgeTypeChange(target){
             default: target.find('.badge').removeClass('bronze silver gold').addClass('silver'); break;
         }
     });
+}
+
+function setupSlider(target){
+    var itemsPerPage = target.data('items_per_page');
+    var next = $('#'+target.data('next'));
+    var prev = $('#'+target.data('prev'));
+    var pageIndicator = $('#'+target.data('pageindicator'));
+    var pages = Math.ceil(target.children().length / itemsPerPage);
+    var currentPage = 0;
+
+    target.children().hide();
+
+    slideToPage(target, -1, currentPage, itemsPerPage)
+
+    pageIndicator.html(1+'/'+pages);
+
+    next.click(function(){
+        var oldPage = currentPage;
+        currentPage++;
+        if(currentPage > pages-1) currentPage = 0;
+        pageIndicator.html((currentPage+1)+'/'+pages);
+        slideToPage(target, oldPage, currentPage, itemsPerPage);
+        return false;
+    });
+
+    prev.click(function(){
+        var oldPage = currentPage;
+        currentPage--;
+        if(currentPage < 0) currentPage = pages-1;
+        pageIndicator.html((currentPage+1)+'/'+pages);
+        slideToPage(target, oldPage, currentPage, itemsPerPage);
+        return false;
+    });
+}
+
+function slideToPage(target, from, to, itemsPerPage){
+    var children = target.children();
+
+    if(from >= 0){
+        var f = (from+1) * itemsPerPage;
+        for(var c = f - itemsPerPage; c < f; c++){
+            $(children[c]).hide();
+        }
+    }
+
+    var t = (to+1) * itemsPerPage;
+    for(var c = t - itemsPerPage; c < t; c++){
+        $(children[c]).show();
+    }
 }

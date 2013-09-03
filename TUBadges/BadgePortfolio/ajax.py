@@ -141,6 +141,9 @@ def issue_badge(request):
                     b.issuer = bu
                     b.candidates = request.GET['candidates']
                     b.proof_url = request.GET['proof']
+
+#TODO: store LVA information if necessary
+
                     b.lva = request.GET['lva']
 
                     b.save()
@@ -200,6 +203,7 @@ def save_badge_preset(request):
                         bp.img = request.GET['img']
                     if 'keywords' in request.GET:
                         bp.keywords = request.GET['keywords']
+
                     bp.save()
                     result = {
                         'error': False,
@@ -313,5 +317,46 @@ def get_user(request):
             result = {'error':True, 'msg':'Es fehlt ein Suchparameter.'}
     else:
         result = {'error': True, 'msg': 'Sie m&uuml;ssen eingeloggt sein.'}
+
+    return HttpResponse(serialize('json', result), content_type="application/json")
+
+
+def get_courses(request):
+    """
+    Tries to find matching courses and returns the resulting list as JSON
+    :type request: HttpRequest
+    """
+    result = {}
+    if 'q' in request.GET:
+        q = request.GET['q']
+        courses = []
+        qm = re.match('^([0-9]{3})\.([0-9]{0,3})$', q);
+        if qm:
+            #tries to find a course by institute and course id
+            for co in LVA.objects.filter(institute=qm.group(0), number=qm.group(1)):
+                courses.append({
+                    'id': co.id,
+                    'title': co.institute+"."+co.number+" "+co.title,
+                    'students': co.students
+                })
+        elif re.match('^[0-9]{3}$', q):
+            #tries to find courses by courseid
+            for co in LVA.objects.filter(number=q):
+                courses.append({
+                    'id': co.id,
+                    'title': co.institute+"."+co.number+" "+co.title,
+                    'students': co.students
+                })
+        else:
+            #trues to find a course by mathing the title
+            for co in LVA.objects.filter(title__icontains=q):
+                courses.append({
+                    'id': co.id,
+                    'title': co.institute+"."+co.number+" "+co.title,
+                    'students': co.students
+                })
+        result = {'error': False, 'courses': courses}
+    else:
+        result = {'error': True, 'msg': 'Es fehlt ein Parameter.', 'courses': []}
 
     return HttpResponse(serialize('json', result), content_type="application/json")
