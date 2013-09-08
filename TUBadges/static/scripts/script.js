@@ -15,6 +15,13 @@ $(function(){
     $('.slider').each(function(){
         setupSlider($(this));
     });
+
+    $('.autocomplete').each(function(){
+        $(this).autocomplete({
+            serviceUrl: $(this).data('serviceurl'),
+            paramName: 'q'
+        });
+    });
 });
 
 $(window).smartresize(function(){

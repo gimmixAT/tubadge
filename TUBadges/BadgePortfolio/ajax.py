@@ -6,7 +6,7 @@ from django.core.context_processors import csrf
 from BadgePortfolio.models import *
 from login_handler import *
 from random import choice
-from django.core.serializers import serialize
+import json
 import logging
 import re
 
@@ -19,7 +19,7 @@ def issue_badge_form(request):
     if is_logged_in(request):
         content = {}
         bu = get_loggedin_user(request)
-        if bu.role is BadgeUser.PROFESSOR:
+        if bu.role == BadgeUser.PROFESSOR:
             if 'pid' in request.GET and request.GET['pid'] != '' and BadgePreset.objects.exists(id=request.GET['pid']):
                 bp = BadgePreset.objects.get(id=request.GET['pid'])
                 content.update({
@@ -44,10 +44,10 @@ def badge_preset_form(request):
     if is_logged_in(request):
         content = {}
         bu = get_loggedin_user(request)
-        if bu.role is BadgeUser.PROFESSOR:
+        if bu.role == BadgeUser.PROFESSOR:
             if 'pid' in request.GET and request.GET['pid'] != '' and BadgePreset.objects.exists(id=request.GET['pid']):
                 bp = BadgePreset.objects.get(id=request.GET['pid'])
-                if bp.issued_badges.count() is 0:
+                if bp.issued_badges.count() == 0:
                     content.update({
                         'name': bp.name,
                         'img': bp.img,
@@ -73,7 +73,7 @@ def issue_badge(request):
     awardee = None
     if is_logged_in(request):
         bu = get_loggedin_user(request)
-        if bu.role is BadgeUser.PROFESSOR:
+        if bu.role == BadgeUser.PROFESSOR:
             if 'awardee_id' in request.GET:
                 #if a user id is given
                 awardee = BadgeUser.objects.get(id=request.GET['awardee_id'])
@@ -84,7 +84,7 @@ def issue_badge(request):
                     if BadgeUser.objects.exists(studentID=request.GET['awardee']):
                         awardee = BadgeUser.objects.get(studentID=request.GET['awardee'])
 
-                    if awardee is None:
+                    if not awardee:
                         awardee = BadgeUser()
                         awardee.student_id = request.GET['awardee']
                         awardee.save()
@@ -99,12 +99,12 @@ def issue_badge(request):
                     'msg': 'Es fehlt ein Parameter'
                 }
 
-            if awardee is not None:
+            if awardee:
                 #issue badge
                 b = None
                 if 'pid' in request.GET and BadgePreset.objects.exists(id=request.GET['pid']):
                     bp = BadgePreset.objects.get(id=request.GET['pid'])
-                    if bp.owner is bu.id:
+                    if bp.owner == bu.id:
                         b = Badge()
                         b.name = bp.name
                         b.keywords = bp.keywords
@@ -125,7 +125,7 @@ def issue_badge(request):
                         'msg': 'Es fehlt ein Parameter'
                     }
 
-                if b is not None:
+                if b:
 #TODO: sanity checking GET
                     if 'keywords' in request.GET:
                         b.keywords += request.GET['keywords']
@@ -163,7 +163,7 @@ def issue_badge(request):
             'msg': 'Sie m&uuml;ssen eingeloggt sein.'
         }
 
-    return HttpResponse(serialize('json', result), content_type="application/json")
+    return HttpResponse(json.dumps(result), content_type="application/json")
 
 
 def save_badge_preset(request):
@@ -175,12 +175,12 @@ def save_badge_preset(request):
 
     if is_logged_in(request):
         bu = get_loggedin_user(request)
-        if bu.role is BadgeUser.PROFESSOR:
+        if bu.role == BadgeUser.PROFESSOR:
             bp = None
             if 'pid' in request.GET and request.GET['pid'] != '':
                 if BadgePreset.objects.exists(id=request.GET['pid']):
                     bp = BadgePreset.objects.get(id=request.GET['pid'])
-                    if bp.owner.id is not get_loggedin_user().id:
+                    if bp.owner.id != get_loggedin_user().id:
                         bp = None
                         result = {
                             'error': True,
@@ -195,8 +195,8 @@ def save_badge_preset(request):
                 bp = BadgePreset()
                 bp.owner = get_loggedin_user()
 
-            if bp is not None:
-                if bp.issued_badges.count() is 0:
+            if bp:
+                if bp.issued_badges.count() == 0:
                     if 'name' in request.GET:
                         bp.name = request.GET['name']
                     if 'img' in request.GET:
@@ -226,7 +226,7 @@ def save_badge_preset(request):
             'msg': 'Sie m&uuml;ssen eingeloggt sein.'
         }
 
-    return HttpResponse(serialize('json', result), content_type="application/json")
+    return HttpResponse(json.dumps(result), content_type="application/json")
 
 
 def duplicate_badge_preset(request):
@@ -238,10 +238,10 @@ def duplicate_badge_preset(request):
 
     if is_logged_in(request):
         bu = get_loggedin_user(request)
-        if bu.role is BadgeUser.PROFESSOR:
+        if bu.role == BadgeUser.PROFESSOR:
             if 'pid' in request.GET and request.GET['pid'] != '' and BadgePreset.objects.exists(id=request.GET['pid']):
                 bp = BadgePreset.objects.get(id=request.GET['pid'])
-                if bp.owner.id is get_loggedin_user().id:
+                if bp.owner.id == get_loggedin_user().id:
                     bpn = BadgePreset()
                     bpn.name = bp.name + "*"
                     bpn.img = bp.img
@@ -274,7 +274,7 @@ def duplicate_badge_preset(request):
             'msg': 'Sie m&uuml;ssen eingeloggt sein.'
         }
 
-    return HttpResponse(serialize('json', result), content_type="application/json")
+    return HttpResponse(json.dumps(result), content_type="application/json")
 
 
 def toggle_public(request):
@@ -295,7 +295,7 @@ def toggle_public(request):
             result = {'error': True, 'msg': 'Es fehlt die BadgeID oder diese ist nicht g&uuml;ltig.'}
     else:
         result = {'error': True, 'msg': 'Sie m&uuml;ssen eingeloggt sein.'}
-    return HttpResponse(serialize('json', result), content_type="application/json")
+    return HttpResponse(json.dumps(result), content_type="application/json")
 
 
 def get_user(request):
@@ -304,10 +304,10 @@ def get_user(request):
     :type request: HttpRequest
     """
     if is_logged_in(request):
-        if 's' in request.GET and request.GET['s'] != '':
-            if get_loggedin_user(request).role is BadgeUser.PROFESSOR:
-                u = BadgeUser.get_matching_user(request.GET['s'])
-                if u is not None:
+        if 'q' in request.GET and request.GET['q'] != '':
+            if get_loggedin_user(request).role == BadgeUser.PROFESSOR:
+                u = BadgeUser.get_matching_user(request.GET['q'])
+                if u:
                     result = {'error': False, 'msg': 'User gefunden.', 'uid': u.id}
                 else:
                     result = {'error': True, 'msg': 'Kein User gefunden.'}
@@ -318,7 +318,36 @@ def get_user(request):
     else:
         result = {'error': True, 'msg': 'Sie m&uuml;ssen eingeloggt sein.'}
 
-    return HttpResponse(serialize('json', result), content_type="application/json")
+    return HttpResponse(json.dumps(result), content_type="application/json")
+
+
+def get_users(request):
+    """
+    Returns the matching users and returns a list in JSON
+    :type request: HttpRequest
+    """
+    if is_logged_in(request):
+        if 'q' in request.GET and request.GET['q'] != '':
+            if get_loggedin_user(request).role == BadgeUser.PROFESSOR:
+                u = BadgeUser.get_matching_users(request.GET['q'])
+                if u:
+                    sugg = []
+                    for user in u:
+                        sugg.append({
+                            'value': str(user.student_id) + ', ' + user.firstname + ' ' + user.lastname,
+                            'data': user.id
+                        })
+                    result = {'error':False, 'suggestions': sugg}
+                else:
+                    result = {'error': True, 'msg': 'Kein User gefunden.', 'suggestions': []}
+            else:
+                result = {'error': True, 'msg': 'Sie haben nicht die n&ouml;tigen Rechte.', 'suggestions': []}
+        else:
+            result = {'error':True, 'msg':'Es fehlt ein Suchparameter.', 'suggestions': []}
+    else:
+        result = {'error': True, 'msg': 'Sie m&uuml;ssen eingeloggt sein.', 'suggestions': []}
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
 
 
 def get_courses(request):
@@ -330,33 +359,39 @@ def get_courses(request):
     if 'q' in request.GET:
         q = request.GET['q']
         courses = []
-        qm = re.match('^([0-9]{3})\.([0-9]{0,3})$', q);
+        qm = re.match('^([0-9]{3})\.([0-9]{1,3})$', q);
         if qm:
             #tries to find a course by institute and course id
-            for co in LVA.objects.filter(institute=qm.group(0), number=qm.group(1)):
+            for co in LVA.objects.filter(institute=int(qm.group(1)), number__startswith=int(qm.group(2))):
                 courses.append({
-                    'id': co.id,
-                    'title': co.institute+"."+co.number+" "+co.title,
-                    'students': co.students
+                    'value': str(co.institute)+"."+str(co.number)+" "+co.title,
+                    'data': {
+                        'students': co.students,
+                        'id': co.id
+                    }
                 })
-        elif re.match('^[0-9]{3}$', q):
+        elif re.match('^[0-9]{1,3}\.?$', q):
             #tries to find courses by courseid
-            for co in LVA.objects.filter(number=q):
+            for co in LVA.objects.filter(number__startswith=q.replace('.', '')):
                 courses.append({
-                    'id': co.id,
-                    'title': co.institute+"."+co.number+" "+co.title,
-                    'students': co.students
+                    'value': str(co.institute)+"."+str(co.number)+" "+co.title,
+                    'data': {
+                        'students': co.students,
+                        'id': co.id
+                    }
                 })
         else:
-            #trues to find a course by mathing the title
+            #trues to find a course by matching the title
             for co in LVA.objects.filter(title__icontains=q):
                 courses.append({
-                    'id': co.id,
-                    'title': co.institute+"."+co.number+" "+co.title,
-                    'students': co.students
+                    'value': str(co.institute)+"."+str(co.number)+" "+co.title,
+                    'data': {
+                        'students': co.students,
+                        'id': co.id
+                    }
                 })
-        result = {'error': False, 'courses': courses}
+        result = {'error': False, 'suggestions': courses}
     else:
-        result = {'error': True, 'msg': 'Es fehlt ein Parameter.', 'courses': []}
+        result = {'error': True, 'msg': 'Es fehlt ein Parameter.', 'suggestions': []}
 
-    return HttpResponse(serialize('json', result), content_type="application/json")
+    return HttpResponse(json.dumps(result), content_type="application/json")

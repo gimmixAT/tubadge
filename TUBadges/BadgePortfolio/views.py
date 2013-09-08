@@ -75,7 +75,7 @@ def presets(request):
     """
     if is_logged_in(request):
         bu = get_loggedin_user(request)
-        if bu.role is BadgeUser.PROFESSOR:
+        if bu.role == BadgeUser.PROFESSOR:
             content = {'presets': BadgePreset.objects.filter(owner=bu.id)}
             content.update(get_header_content(request))
 

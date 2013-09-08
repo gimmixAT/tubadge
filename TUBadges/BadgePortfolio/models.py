@@ -31,7 +31,8 @@ class BadgeUser(models.Model):
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
 
-    def get_matching_user(self, query):
+    @staticmethod
+    def get_matching_user(query):
         """
         :type query: String
         """
@@ -52,15 +53,16 @@ class BadgeUser(models.Model):
 
         return None
 
-    def get_matching_users(self, query):
+    @staticmethod
+    def get_matching_users(query):
         """
         :type query: String
         """
         parts = query.split(' ', 2)
         if len(parts) is 2:
-            return BadgeUser.objects.get(Q(email__icontains=query) | Q(studentID__contains=query) | (Q(firstname__icontains=parts[0]) & Q(lastname__icontains=parts[1])))
+            return BadgeUser.objects.filter(Q(email__icontains=query) | Q(student_id__startswith=query) | (Q(firstname__icontains=parts[0]) & Q(lastname__icontains=parts[1])))
         else:
-            return BadgeUser.objects.get(Q(email__icontains=query) | Q(studentID__contains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query) )
+            return BadgeUser.objects.filter(Q(email__icontains=query) | Q(student_id__startswith=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query))
 
     def __unicode__(self):
         return self.firstname+" "+self.lastname+" ("+self.email+")"
@@ -77,6 +79,9 @@ class LVA(models.Model):
     title = models.CharField(max_length=300)
     tutors = models.ManyToManyField(BadgeUser)
     students = models.IntegerField()
+
+    def __unicode__(self):
+        return unicode(self.institute)+"."+unicode(self.number)+" "+self.title
 
     class Meta:
         unique_together = ('institute', 'number')

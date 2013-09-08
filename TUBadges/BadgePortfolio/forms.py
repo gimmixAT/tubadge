@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from BadgePortfolio.models import BadgeUser
+from BadgePortfolio.models import BadgeUser, LVA
 
 
 class BadgeUserForm(forms.ModelForm):
@@ -14,3 +14,9 @@ class BadgeUserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class LVAForm(forms.ModelForm):
+
+    class Meta:
+        model = LVA
