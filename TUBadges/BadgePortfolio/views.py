@@ -46,13 +46,20 @@ def badges(request):
         shape_path = 'static/images/shapes/'
         for s in os.listdir(shape_path):
             if isfile(join(shape_path, s)):
-                shapes.append(join('images/shapes/', s))
+                shapes.append({
+                    'url': join('images/shapes/', s),
+                    'name': s.split('.')[0]
+                })
 
         patterns = []
         pattern_path = 'static/images/patterns/'
         for p in os.listdir(pattern_path):
             if isfile(join(pattern_path, p)):
-                patterns.append('bgsvg?p='+p.replace('.svg', ''))
+                p = p.replace('.svg', '')
+                patterns.append({
+                    'url': 'bgsvg?p='+p,
+                    'name': p
+                })
 
         content.update({
             'shapes': shapes,

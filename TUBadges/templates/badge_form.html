@@ -2,6 +2,9 @@
             <div>
                 <label for="awardee">Der Student </label><span class="input"><input name="awardee" id="awardee" value="" placeholder="Matrikelnummer" class="autocomplete" data-serviceurl="/ajax/users"/></span>
                 <label for="lva">hat in</label><span class="input"><input name="lva" id="lva" value="" placeholder="123.456 Lehrveranstaltung" class="autocomplete" data-serviceurl="/ajax/courses"/></span>
+                <input type="hidden" name="lva_institute" id="lva_institute" />
+                <input type="hidden" name="lva_number" id="lva_number" />
+                <input type="hidden" name="lva_title" id="lva_title" />
                 <label for="students">als einer von</label><span class="input autosize"><input name="students" id="students" value="" placeholder="123"/></span> Studenten
                 <label for="proof">die folgende Leistung erbracht:</label><br/>
                 <span class="textarea"><textarea name="proof" id="proof" placeholder="URL oder kurze Beschreibung" rows="1" class="autosize"></textarea></span>

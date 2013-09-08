@@ -3,6 +3,7 @@
     </div>
     <div class="modal">
         <div class="contentbox">
+            <a href="#close" class="close"></a>
             <h1>Badge Preset erstellen</h1>
             <div class="badgecreator">
                 <div class="preview col-3">
@@ -20,7 +21,7 @@
                     </div>
                     <ul class="shapes slider" data-items_per_page="16" data-next="symbols_next" data-prev="symbols_prev" data-pageindicator="symbols_page">
                         {% for s in shapes %}
-                        <li><a href="#"><img src="{% static s %}" /></a><img src="{% static 'images/blank.png' %}" /></li>
+                        <li><a href="#change-shape" data-name="{{ s.name }}"><img src="{% static s.url %}" /></a><img src="{% static 'images/blank.png' %}" /></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -29,7 +30,7 @@
                     <h2>Muster</h2>
                     <ul class="patterns">
                         {% for p in patterns %}
-                        <li><a href="#"><img src="{{ p }}" /></a><img src="{% static 'images/blank.png' %}" /></li>
+                        <li><a href="#change-pattern" data-name="{{ p.name }}"><img src="{{ p.url }}" /></a><img src="{% static 'images/blank.png' %}" /></li>
                         {% endfor %}
                     </ul>
                 </div>

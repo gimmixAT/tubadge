@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 from xml.dom import minidom
 from django.template import loader, Context
 import re
+from os.path import exists
 
 
 def build_svg(request):
@@ -14,13 +15,13 @@ def build_svg(request):
     pattern = 'checker'
     color = '#ff00ff'
 
-    if 's' in request.GET:
+    if 's' in request.GET and request.GET['s'] != '' and exists('static/images/shapes/'+request.GET['s']+'.svg'):
         shape = request.GET['s']
 
-    if 'p' in request.GET:
+    if 'p' in request.GET and request.GET['p'] != '' and exists('static/images/patterns/'+request.GET['p']+'.svg'):
         pattern = request.GET['p']
 
-    if 'c' in request.GET:
+    if 'c' in request.GET and request.GET['c'] != '':
         color = '#'+request.GET['c']
 
     pattern_dom = minidom.parse('static/images/patterns/'+pattern+'.svg')
@@ -41,7 +42,7 @@ def build_svg(request):
     cont = Context(content)
     rendered = t.render(cont)
 
-    return  HttpResponse(rendered, content_type="image/svg+xml")
+    return HttpResponse(rendered, content_type="image/svg+xml")
 
 
 def build_bg_svg(request):
@@ -67,4 +68,4 @@ def build_bg_svg(request):
     cont = Context(content)
     rendered = t.render(cont)
 
-    return  HttpResponse(rendered, content_type="image/svg+xml")
+    return HttpResponse(rendered, content_type="image/svg+xml")

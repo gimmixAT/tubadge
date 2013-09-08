@@ -22,6 +22,9 @@ $(function(){
             paramName: 'q'
         });
     });
+
+    setupBadgePresetForm($('.modal .contentbox'));
+
 });
 
 $(window).smartresize(function(){
@@ -45,8 +48,6 @@ function getColumnWidth(cols){
     } else if (w <= 1200) {
         out = $('.badges').width() * 1/(5*cols);
     }
-
-    console.log(w + ' -> ' + out);
 
     return out;
 }
@@ -152,4 +153,55 @@ function slideToPage(target, from, to, itemsPerPage){
     for(var c = t - itemsPerPage; c < t; c++){
         $(children[c]).show();
     }
+}
+
+/**
+ * Loads HTML via AJAX from the given url and calls showModal
+ */
+function requestModal(url){
+    $.ajax({
+        'url': url,
+        'success': function(data){
+            showModal(data);
+        },
+        'dataType': 'html'
+    });
+}
+
+/**
+ * Displays the given HTML in a modal window
+ */
+function showModal(html){
+    $('.modal .contentbox').html(html).append('<a href="#close" class="close"></a>').fadeIn();
+    $('.modal .contentbox .close').click(function(){
+        hideModal();
+        return false;
+    });
+}
+
+/**
+ * Hides the current modal window
+ */
+function hideModal(){
+    $('.modal').fadeOut(function(){
+        $('.contentbox', this).empty();
+    });
+}
+
+function setupBadgePresetForm(container){
+    var currentShape = '';
+    var currentPattern = '';
+    var badgePreview = $('.badgecreator .preview img', container);
+
+    $('a[href="#change-pattern"]', container).click(function(){
+        currentPattern = $(this).data('name');
+        badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c=ffcc00');
+        return false;
+    });
+
+    $('a[href="#change-shape"]', container).click(function(){
+        currentShape = $(this).data('name');
+        badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c=ffcc00');
+        return false;
+    });
 }

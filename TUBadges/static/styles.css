@@ -535,11 +535,13 @@ a {
         font-size: 18px;
         line-height: 46px;
         color: #666666;
+        position: relative;
     }
 
     .modal h1 {
         font-family: 'Open Sans';
         font-size: 24px;
+        line-height: 24px;
         font-weight: 600;
         color: #333333;
         margin: 0;
@@ -602,6 +604,22 @@ a {
     .modal .opt .value {
         color:#111111;
     }
+
+    .modal .close{
+        position: absolute;
+        right: 25px;
+        top: 25px;
+        display: block;
+        background-image: url('./images/modal_close.png');
+        background-repeat:no-repeat;
+        width: 20px;
+        height: 20px;
+        opacity: 0.5;
+    }
+
+        .modal .close:hover {
+            opacity: 1;
+        }
 
 
 .badgecreator {

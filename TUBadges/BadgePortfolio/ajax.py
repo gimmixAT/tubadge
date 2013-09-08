@@ -67,6 +67,7 @@ def badge_preset_form(request):
 def issue_badge(request):
     """
     Issues the requested badge and returns a JSON response
+    :param request:
     :type request: HttpRequest
     """
     result = {}
@@ -74,19 +75,19 @@ def issue_badge(request):
     if is_logged_in(request):
         bu = get_loggedin_user(request)
         if bu.role == BadgeUser.PROFESSOR:
-            if 'awardee_id' in request.GET:
+            if 'awardee_id' in request.POST:
                 #if a user id is given
-                awardee = BadgeUser.objects.get(id=request.GET['awardee_id'])
-            elif 'awardee' in request.GET:
+                awardee = BadgeUser.objects.get(id=request.POST['awardee_id'])
+            elif 'awardee' in request.POST:
                 # if no user id is given check if the name is a studentID and
                 # create a new user if the studentID isn't already in use
-                if re.match('^[0-9]{7}$', request.GET['awardee'], re.IGNORECASE):
-                    if BadgeUser.objects.exists(studentID=request.GET['awardee']):
-                        awardee = BadgeUser.objects.get(studentID=request.GET['awardee'])
+                if re.match('^[0-9]{7}$', request.POST['awardee'], re.IGNORECASE):
+                    if BadgeUser.objects.exists(studentID=request.POST['awardee']):
+                        awardee = BadgeUser.objects.get(studentID=request.POST['awardee'])
 
                     if not awardee:
                         awardee = BadgeUser()
-                        awardee.student_id = request.GET['awardee']
+                        awardee.student_id = request.POST['awardee']
                         awardee.save()
                 else:
                     result = {
@@ -102,8 +103,8 @@ def issue_badge(request):
             if awardee:
                 #issue badge
                 b = None
-                if 'pid' in request.GET and BadgePreset.objects.exists(id=request.GET['pid']):
-                    bp = BadgePreset.objects.get(id=request.GET['pid'])
+                if 'pid' in request.POST and BadgePreset.objects.exists(id=request.POST['pid']):
+                    bp = BadgePreset.objects.get(id=request.POST['pid'])
                     if bp.owner == bu.id:
                         b = Badge()
                         b.name = bp.name
@@ -115,42 +116,61 @@ def issue_badge(request):
                             'error': True,
                             'msg': 'Sie haben nicht die n&ouml;tigen Rechte um dieses Badge Preset zu verwenden.'
                         }
-                elif 'name' in request.GET and 'img' in request.GET:
+                elif 'name' in request.POST and 'img' in request.POST:
                     b = Badge()
-                    b.name = request.GET['name']
-                    b.img = request.GET['img']
+                    b.name = request.POST['name']
+                    b.img = request.POST['img']
                 else:
                     result = {
                         'error': True,
                         'msg': 'Es fehlt ein Parameter'
                     }
 
-                if b:
-#TODO: sanity checking GET
-                    if 'keywords' in request.GET:
-                        b.keywords += request.GET['keywords']
+                if b and 'rating' in request.POST and request.POST['rating'] >= 0 and request.POST['rating'] <= 3:
+#TODO: sanity checking POST
+                    if 'keywords' in request.POST:
+                        b.keywords += request.POST['keywords']
 
                     b.awardee = awardee
 
-                    if 'awarder' in request.GET:
-                        b.awarder = request.GET['awarder']
+                    if 'awarder' in request.POST and request.POST['awarder'] != '':
+                        b.awarder = request.POST['awarder']
                     else:
                         b.awarder = bu.id
 
-                    b.rating = request.GET['rating']
+
+                    b.rating = request.POST['rating']
                     b.issuer = bu
-                    b.candidates = request.GET['candidates']
-                    b.proof_url = request.GET['proof']
 
-#TODO: store LVA information if necessary
+                    if 'students' in request.POST:
+                        b.candidates = request.POST['students']
+                    else:
+                        b.candidates = 1
 
-                    b.lva = request.GET['lva']
+                    b.proof_url = request.POST['proof']
+
+                    if 'lva_id' not in request.POST or request.POST['lva_id'] == '':
+                        if 'lva_title' in request.POST and request.POST['lva_title'] != '':
+                            lva = LVA()
+                            lva.title = request.POST['lva_title']
+                            lva.institute = request.POST['lva_institute']
+                            lva.number = request.POST['lva_number']
+                            lva.students = request.POST['students']
+                            lva.save()
+                            b.lva = lva
+                    else:
+                        b.lva = LVA.objects.get(id=request.POST['lva_id'])
 
                     b.save()
 
                     result = {
                         'error': False,
                         'id': b.id
+                    }
+                else:
+                    result = {
+                        'error': True,
+                        'msg': 'Es fehlt ein oder mehrere Parameter.'
                     }
         else:
             result = {
@@ -177,9 +197,9 @@ def save_badge_preset(request):
         bu = get_loggedin_user(request)
         if bu.role == BadgeUser.PROFESSOR:
             bp = None
-            if 'pid' in request.GET and request.GET['pid'] != '':
-                if BadgePreset.objects.exists(id=request.GET['pid']):
-                    bp = BadgePreset.objects.get(id=request.GET['pid'])
+            if 'pid' in request.POST and request.POST['pid'] != '':
+                if BadgePreset.objects.exists(id=request.POST['pid']):
+                    bp = BadgePreset.objects.get(id=request.POST['pid'])
                     if bp.owner.id != get_loggedin_user().id:
                         bp = None
                         result = {
@@ -197,12 +217,12 @@ def save_badge_preset(request):
 
             if bp:
                 if bp.issued_badges.count() == 0:
-                    if 'name' in request.GET:
-                        bp.name = request.GET['name']
-                    if 'img' in request.GET:
-                        bp.img = request.GET['img']
-                    if 'keywords' in request.GET:
-                        bp.keywords = request.GET['keywords']
+                    if 'name' in request.POST:
+                        bp.name = request.POST['name']
+                    if 'img' in request.POST:
+                        bp.img = request.POST['img']
+                    if 'keywords' in request.POST:
+                        bp.keywords = request.POST['keywords']
 
                     bp.save()
                     result = {
@@ -239,8 +259,8 @@ def duplicate_badge_preset(request):
     if is_logged_in(request):
         bu = get_loggedin_user(request)
         if bu.role == BadgeUser.PROFESSOR:
-            if 'pid' in request.GET and request.GET['pid'] != '' and BadgePreset.objects.exists(id=request.GET['pid']):
-                bp = BadgePreset.objects.get(id=request.GET['pid'])
+            if 'pid' in request.POST and request.POST['pid'] != '' and BadgePreset.objects.exists(id=request.POST['pid']):
+                bp = BadgePreset.objects.get(id=request.POST['pid'])
                 if bp.owner.id == get_loggedin_user().id:
                     bpn = BadgePreset()
                     bpn.name = bp.name + "*"
@@ -283,8 +303,8 @@ def toggle_public(request):
     :type request: HttpRequest
     """
     if is_logged_in(request):
-        if 'bid' in request.GET and request.GET['bid'] != '' and Badge.objects.exists(id=request.GET['bid']):
-            badge = Badge.objects.get(id=request.GET['bid'])
+        if 'bid' in request.POST and request.POST['bid'] != '' and Badge.objects.exists(id=request.POST['bid']):
+            badge = Badge.objects.get(id=request.POST['bid'])
             if badge.awardee.id == get_loggedin_user().id:
                 badge.public = not badge.public
                 badge.save()
