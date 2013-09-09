@@ -93,11 +93,6 @@ class BadgePreset(models.Model):
     img = models.CharField(max_length=200)
     keywords = models.ManyToManyField(Tag)
 
-    class Meta:
-        permissions = (
-            ("can_have_presets", "Can create, view, edit and delete his own BadgePresets"),
-        )
-
 
 class Badge(models.Model):
     GOLD = 2

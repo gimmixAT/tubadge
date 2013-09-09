@@ -1,5 +1,6 @@
             <h1>Badge vergeben</h1>
             <div>
+                {% csrf_token %}
                 <label for="awardee">Der Student </label><span class="input"><input name="awardee" id="awardee" value="" placeholder="Matrikelnummer" class="autocomplete" data-serviceurl="/ajax/users"/></span>
                 <label for="lva">hat in</label><span class="input"><input name="lva" id="lva" value="" placeholder="123.456 Lehrveranstaltung" class="autocomplete" data-serviceurl="/ajax/courses"/></span>
                 <input type="hidden" name="lva_institute" id="lva_institute" />

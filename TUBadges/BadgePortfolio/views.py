@@ -65,6 +65,7 @@ def badges(request):
             'shapes': shapes,
             'patterns': patterns
         })
+        content.update(csrf(request))
 
         return render_to_response(
             'badges.html',

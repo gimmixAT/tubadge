@@ -200,7 +200,7 @@ def save_badge_preset(request):
             if 'pid' in request.POST and request.POST['pid'] != '':
                 if BadgePreset.objects.exists(id=request.POST['pid']):
                     bp = BadgePreset.objects.get(id=request.POST['pid'])
-                    if bp.owner.id != get_loggedin_user().id:
+                    if bp.owner.id != bu.id:
                         bp = None
                         result = {
                             'error': True,
@@ -213,16 +213,29 @@ def save_badge_preset(request):
                     }
             else:
                 bp = BadgePreset()
-                bp.owner = get_loggedin_user()
+                bp.owner = bu
 
             if bp:
-                if bp.issued_badges.count() == 0:
+
+                if not bp.id or bp.issued_badges.count() == 0:
                     if 'name' in request.POST:
                         bp.name = request.POST['name']
                     if 'img' in request.POST:
                         bp.img = request.POST['img']
+
+                    bp.save()
+
                     if 'keywords' in request.POST:
-                        bp.keywords = request.POST['keywords']
+                        kw = request.POST['keywords'].split(',')
+                        for k in kw:
+                            k = k.strip()
+                            if Tag.objects.filter(name=k).exists():
+                                ko = Tag.objects.get(name=k)
+                            else:
+                                ko = Tag()
+                                ko.name = k
+                                ko.save()
+                            bp.keywords.add(ko)
 
                     bp.save()
                     result = {
@@ -261,7 +274,7 @@ def duplicate_badge_preset(request):
         if bu.role == BadgeUser.PROFESSOR:
             if 'pid' in request.POST and request.POST['pid'] != '' and BadgePreset.objects.exists(id=request.POST['pid']):
                 bp = BadgePreset.objects.get(id=request.POST['pid'])
-                if bp.owner.id == get_loggedin_user().id:
+                if bp.owner.id == bu.id:
                     bpn = BadgePreset()
                     bpn.name = bp.name + "*"
                     bpn.img = bp.img
@@ -305,7 +318,7 @@ def toggle_public(request):
     if is_logged_in(request):
         if 'bid' in request.POST and request.POST['bid'] != '' and Badge.objects.exists(id=request.POST['bid']):
             badge = Badge.objects.get(id=request.POST['bid'])
-            if badge.awardee.id == get_loggedin_user().id:
+            if badge.awardee.id == get_loggedin_user(request).id:
                 badge.public = not badge.public
                 badge.save()
                 result = {'error': False, 'msg': 'Erfolgreich gespeichert.', 'public': badge.public}
