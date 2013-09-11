@@ -402,7 +402,7 @@ a {
                     }
 
 
-    input, textarea, select {
+    input, textarea, select, button {
         font-size:18px;
         color:#111111;
         padding:5px;
@@ -441,7 +441,7 @@ a {
         margin: 15px 0 0 0;
     }
         
-    input[type="button"], input[type="submit"] {
+    input[type="button"], input[type="submit"], button {
         background:#ffffff;
         color:#0070af;
         font-weight:600;
@@ -462,7 +462,7 @@ a {
             font-size: 16px;
         }
 
-        input[type="button"]:hover, input[type="submit"]:hover {
+        input[type="button"]:hover, input[type="submit"]:hover, button:hover {
             text-shadow: 0px 2px 0px #ffffff, 2px 2px 0px #ffffff, -2px 2px 0px #ffffff;
             box-shadow: inset 0px -6px 0px #ffffff, inset 0px -8px 0px #0070af;
         }
@@ -662,6 +662,12 @@ a {
         margin: 0;
         padding: 0;
         line-height: normal;
+    }
+
+    .badgecreator .color-wrapper {
+        position: absolute;
+        left:70px;
+        top: -13px;
     }
 
     .badgecreator .browse {

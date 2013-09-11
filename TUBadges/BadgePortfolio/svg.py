@@ -34,8 +34,8 @@ def build_svg(request):
         'pattern_width': pattern_root.getAttribute('width'),
         'pattern_height': pattern_root.getAttribute('height'),
         'shape': re.sub(r'(fill|stroke):#[a-f0-9]{6}', r'\1:'+color, re.sub(r'(fill|stroke)="#[a-f0-9]{6}"', r'\1="'+color+'"', shape_root.toxml(), flags=re.IGNORECASE), flags=re.IGNORECASE),
-        'shape_width': shape_root.getAttribute('width').replace('px', ''),
-        'shape_height': shape_root.getAttribute('height').replace('px', '')
+        'shape_width': int(float(shape_root.getAttribute('width').replace('px', '')))+2,
+        'shape_height': int(float(shape_root.getAttribute('height').replace('px', '')))+2
     }
 
     t = loader.get_template('svg_base.svg')

@@ -195,17 +195,18 @@ function hideModal(){
 function setupBadgePresetForm(container){
     var currentShape = '';
     var currentPattern = '';
+    var currentColor = 'ffcc00'
     var badgePreview = $('.badgecreator .preview img', container);
 
     $('a[href="#change-pattern"]', container).click(function(){
         currentPattern = $(this).data('name');
-        badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c=ffcc00');
+        badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
         return false;
     });
 
     $('a[href="#change-shape"]', container).click(function(){
         currentShape = $(this).data('name');
-        badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c=ffcc00');
+        badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
         return false;
     });
 
@@ -220,6 +221,26 @@ function setupBadgePresetForm(container){
                 'keywords': $('#keywords').val()
             }
         })
+    });
+
+    $("#shape-color").spectrum({
+        color: '#ffcc00',
+        localStorageKey: 'shapeColors',
+        showPalette: true,
+        showSelectionPalette: true,
+        palette: ['#ffcc00', '#0070af'],
+        showInitial: true,
+        preferredFormat: 'hex',
+        showInput: true,
+        show: function(color) {
+            var c = $("#shape-color").spectrum('container');
+            var o = c.offset();
+            c.css('left', (o.left-14)+'px').css('top', (o.top+5)+'px');
+            return true;
+        }, change : function(color){
+            currentColor = color.toHexString().substr(1);
+            badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
+        }
     });
 }
 
