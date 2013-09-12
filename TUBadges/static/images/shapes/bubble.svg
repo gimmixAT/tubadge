@@ -1,1 +1,23 @@
-<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg fill="#000000" enable-background="new 0 0 24 24" height="24px" id="Layer_1" version="1.1" viewBox="0 0 24 24" width="24px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><path clip-rule="evenodd" d="M10.718,18.561l6.78,5.311C17.609,23.957,17.677,24,17.743,24  c0.188,0,0.244-0.127,0.244-0.338v-5.023c0-0.355,0.233-0.637,0.548-0.637L21,18c2.219,0,3-1.094,3-2s0-13,0-14s-0.748-2-3.014-2  H2.989C0.802,0,0,0.969,0,2s0,13.031,0,14s0.828,2,3,2h6C9,18,10.255,18.035,10.718,18.561z" fill-rule="evenodd"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   id="Layer_1"
+   xml:space="preserve"
+   style="fill:#000000"><metadata
+     id="metadata3019"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+     id="defs3017" /><path
+     d="m 10.931667,17.4675 5.65,4.425833 C 16.674167,21.964167 16.730833,22 16.785833,22 16.9425,22 16.989167,21.894167 16.989167,21.718333 V 17.5325 c 0,-0.295833 0.194166,-0.530833 0.456666,-0.530833 L 19.5,17 C 21.349167,17 22,16.088333 22,15.333333 22,14.578333 22,4.5 22,3.6666667 22,2.8333333 21.376667,2 19.488333,2 H 4.4908333 C 2.6683333,2 2,2.8075 2,3.6666667 2,4.5258333 2,14.525833 2,15.333333 2,16.140833 2.69,17 4.5,17 h 5 c 0,0 1.045833,0.02917 1.431667,0.4675 z"
+     id="path3013"
+     style="fill-rule:evenodd" /></svg>

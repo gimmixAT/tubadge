@@ -158,11 +158,11 @@ function slideToPage(target, from, to, itemsPerPage){
 /**
  * Loads HTML via AJAX from the given url and calls showModal
  */
-function requestModal(url){
+function requestModal(url, maxWidth){
     $.ajax({
         'url': url,
         'success': function(data){
-            showModal(data);
+            showModal(data, maxWidth);
         },
         'dataType': 'html'
     });
@@ -171,8 +171,8 @@ function requestModal(url){
 /**
  * Displays the given HTML in a modal window
  */
-function showModal(html){
-    $('.modal .contentbox').html(html).append('<a href="#close" class="close"></a>').fadeIn();
+function showModal(html, maxWidth){
+    $('.modal .contentbox').css('max-width', maxWidth).html(html).append('<a href="#close" class="close"></a>').fadeIn();
     $('.modal .contentbox .close').click(function(){
         hideModal();
         return false;
@@ -193,19 +193,25 @@ function hideModal(){
  * Badge Preset Form related funtions
  */
 function setupBadgePresetForm(container){
-    var currentShape = '';
-    var currentPattern = '';
+    var currentShape = container.find('.shapes > li > a').first().addClass('selected').data('name');
+    var currentPattern = container.find('.patterns > li > a').first().addClass('selected').data('name');
     var currentColor = 'ffcc00'
     var badgePreview = $('.badgecreator .preview img', container);
 
+    badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
+
     $('a[href="#change-pattern"]', container).click(function(){
         currentPattern = $(this).data('name');
+        $(this).parent().parent().find('a.selected').removeClass('selected');
+        $(this).addClass('selected');
         badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
         return false;
     });
 
     $('a[href="#change-shape"]', container).click(function(){
         currentShape = $(this).data('name');
+        $(this).parent().parent().find('a.selected').removeClass('selected');
+        $(this).addClass('selected');
         badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
         return false;
     });

@@ -1,3 +1,46 @@
-<div class="box">
+            <h1>Badge Preset erstellen</h1>
+            {% csrf_token %}
+            <div class="badgecreator">
+                <div class="preview col-3">
+                    <div class="bg"></div>
+                    <div class="fg"></div>
+                    <img src="/svg?p=carbon&s=genius&c=ffcc00" />
+                </div>
 
-</div>
+                <div class="col-3" style="position: relative;">
+                    <h2>Symbol</h2>
+                    <div class="color-wrapper"><input id="shape-color" /></div>
+                    <div class="browse">
+                        <a href="#previous" class="prev" id="symbols_prev">&laquo;</a>
+                        <span class="page" id="symbols_page">-/-</span>
+                        <a href="#next" class="next" id="symbols_next">&raquo;</a>
+                    </div>
+                    <ul class="shapes slider" data-items_per_page="16" data-next="symbols_next" data-prev="symbols_prev" data-pageindicator="symbols_page">
+                        {% for s in shapes %}
+                        <li><a href="#change-shape" data-name="{{ s.name }}"><img src="{% static s.url %}" /></a><img src="{% static 'images/blank.png' %}" /></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="col-3">
+                    <h2>Muster</h2>
+                    <ul class="patterns">
+                        {% for p in patterns %}
+                        <li><a href="#change-pattern" data-name="{{ p.name }}"><img src="{{ p.url }}" /></a><img src="{% static 'images/blank.png' %}" /></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="axisform clear">
+
+                <label for="name">Name </label> <span class="input"><input name="name" id="name" value="" placeholder="Badgebezeichnung"/></span>
+                <label for="keywords">Schlagw&ouml;rter</label>
+                <span class="textarea inline"><textarea name="keywords" id="keywords" placeholder="zB UX Design, Java, Numerik, ..." rows="1" class="autosize"></textarea></span>
+
+                <div class="buttongroup">
+                    <input type="button" class="submit" value="&raquo; Preset erstellen" />
+                    <input type="button" class="cancel" value="&raquo;  Abbrechen" />
+                    <input type="button" class="small clear subadd" value="&raquo; Preset und weiteres erstellen" />
+                </div>
+            </div>

@@ -223,10 +223,18 @@ a {
                 background-color: #cc9933;
             }
 
-        .badge .image > img {
-            width: 90%;
+        .badge .image img {
+            width: 100%;
             display: block;
+        }
+
+        .badge .image .crop {
+            width: 90%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            border-radius: 50%;
             margin: 5%;
+            overflow:hidden;
         }
 
         .badge h2 {
@@ -615,6 +623,7 @@ a {
         width: 20px;
         height: 20px;
         opacity: 0.5;
+        z-index: 10;
     }
 
         .modal .close:hover {
@@ -709,6 +718,10 @@ a {
                 z-index: 2;
             }
 
+            .badgecreator .shapes > li > a.selected {
+                opacity: 1;
+            }
+
             .badgecreator .shapes > li > a > img {
                 width:100%;
                 height:auto;
@@ -736,6 +749,7 @@ a {
             height: auto;
             border-radius: 50%;
             border:2px solid #cccccc;
+            background-color: #cccccc;
             overflow: hidden;
             position: absolute;
             left: 0;
@@ -749,10 +763,103 @@ a {
                 z-index: 2;
             }
 
+            .badgecreator .patterns > li > a.selected {
+                border-color:#0070af;
+                background-color:#0070af;
+            }
+
             .badgecreator .patterns > li > a > img {
                 width:100%;
                 height:auto;
             }
+
+.modal .badge {
+    width: 100%;
+    position: relative;
+    padding:0;
+}
+
+    .modal .badge .top{
+        width: 100%;
+        position: relative;
+        margin: 0 0 30px 0;
+    }
+
+    .modal .badge .image {
+        width:232px;
+        height:232px;
+        margin: 0 auto;
+    }
+
+    .modal .badge h2 {
+        font-size:24px;
+    }
+
+    .modal .badge .info {
+        font-size:14px;
+    }
+
+    .modal .badge .value {
+        left:0;
+        top:auto;
+        bottom:0;
+        right:auto;
+        line-height: 18px;
+    }
+
+        .modal .badge .value .label {
+            display: block;
+            margin: 10px 0 0 0;
+        }
+
+    .modal .badge .line {
+        height: 1px;
+        position: relative;
+        left:-25px;
+        width: 100%;
+        padding: 0 25px 0 25px;
+        background-image: url('./images/dotted_line.gif');
+        background-repeat: repeat-x;
+        margin: 20px 0 20px 0;
+    }
+
+    .modal .badge .quote {
+        font-size:20px;
+        color: #666666;
+        font-style:italic;
+        position: relative;
+        text-indent: 30px;
+    }
+
+        .modal .badge .quote:before {
+            content:'“';
+            font-size:72px;
+            font-family: 'Yanone Kaffeesatz', sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            position: absolute;
+            left:-30px;
+            top:-15px;
+            color: #999999;
+        }
+
+        .modal .badge .quote:after {
+            content:'”';
+            font-size:72px;
+            font-family: 'Yanone Kaffeesatz', sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            position: absolute;
+            margin: -1px 0 0 -27px;
+            color: #999999;
+        }
+
+        .modal .badge h3 {
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 27px;
+            margin: 0;
+        }
 
 
 /* autocomplete styles */
