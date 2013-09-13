@@ -25,6 +25,10 @@ $(function(){
 
     setupBadgePresetForm($('.modal .contentbox'));
 
+    $('.badge.preset .active-area').click(function(e){
+        requestModal('/ajax/preset?id='+$(this).parent().data('id'), 450);
+        return false;
+    });
 });
 
 $(window).smartresize(function(){
@@ -172,7 +176,7 @@ function requestModal(url, maxWidth){
  * Displays the given HTML in a modal window
  */
 function showModal(html, maxWidth){
-    $('.modal .contentbox').css('max-width', maxWidth).html(html).append('<a href="#close" class="close"></a>').fadeIn();
+    $('.modal .contentbox').css('max-width', maxWidth).html(html).append('<a href="#close" class="close"></a>').parent().fadeIn();
     $('.modal .contentbox .close').click(function(){
         hideModal();
         return false;

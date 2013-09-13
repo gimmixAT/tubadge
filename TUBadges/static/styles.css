@@ -6,14 +6,18 @@ html, body, div, ul, li, p, span {
 input, select, textarea, button{font-family:inherit;}
 
 html, body {
-    min-height:100%;
     position:relative
+}
+
+html{
+    height: 100%;
 }
 
 body {
     background-color:#f0f0f0;
     font-family:'Open Sans', sans-serif;
     color:#111111;
+    min-height:100%;
 }
 
 h1 {
@@ -223,9 +227,20 @@ a {
                 background-color: #cc9933;
             }
 
-        .badge .image img {
+        .badge .image img, .badge .image object, .badge .image embed {
             width: 100%;
             display: block;
+        }
+
+        .badge .active-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: transparent;
+            display: block;
+            z-index: 1;
         }
 
         .badge .image .crop {
@@ -246,7 +261,12 @@ a {
         .badge .info{
             font-size:13px;
             color:#333333;
+            margin: 7px 0 7px 0;
         }
+
+            .badge .info:last-of-type{
+                margin: 7px 0 0 0;
+            }
 
         .badge .tags {
             font-size: 13px;
@@ -271,6 +291,7 @@ a {
             right: 0;
             display: none;
             visibility: hidden;
+            z-index: 2;
         }
 
             .badge:hover ul.actions {

@@ -1,0 +1,15 @@
+            <div class="badge">
+                <div class="top">
+                    <div class="image"><div class="crop"><object data="{{ bp.img }}"><img src="{{ bp.img }}" alt="badge image"/></object></div></div>
+                    <div class="info value">
+                        <span class="label">Vertrauen ø</span> 40%<br/>
+                        <span class="label">Vergeben</span> 200/1239
+                    </div>
+                </div>
+                <h2>{{ bp.name }}</h2>
+                <div class="line"></div>
+                <div class="info">
+                    <h3>Schlagwörter</h3>
+                    {{ bp.keywords.all|join:", " }}
+                </div>
+            </div>

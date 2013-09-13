@@ -1,4 +1,24 @@
 {% include 'header.html' with page='Badge Presets' menu_selected=1 %}
-    <h1>Badge Presets</h1>
-    {{ presets }}
+        <h1>Badge Presets</h1>
+        <div class="badges">
+            {% for p in presets %}
+            <div class="badge box preset" data-id="{{ p.id }}">
+                <div class="image"><div class="crop"><object data="{{ p.img }}"><img src="{{ p.img }}" alt="badge image"/></object></div></div>
+                <ul class="actions">
+                    <li><a href="#edit" class="edit" title="Editieren"></a></li>
+                    <li><a href="#duplicate" class="duplicate" title="Duplizieren"></a></li>
+                    <li><a href="#issue" class="issue" title="Badge vergeben"></a></li>
+                    <li><a href="#delete" class="delete" title="L&ouml;schen"></a></li>
+                </ul>
+                <h2>{{ p.name }}</h2>
+                {% if p.keywords.all|length > 0 %}
+                <div class="info">
+                    <span class="label">Schlagw&ouml;rter</span></br>
+                    {{ p.keywords.all|join:", " }}
+                </div>
+                {% endif %}
+                <a class="active-area" href="#details" title="Details"></a>
+            </div>
+            {% endfor %}
+        </div>
 {% include 'footer.html' %}

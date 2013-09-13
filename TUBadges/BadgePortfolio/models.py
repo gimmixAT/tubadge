@@ -9,6 +9,9 @@ import re
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
+    def __unicode__(self):
+        return self.name
+
 
 class BadgeUser(models.Model):
     STUDENT = 'stud'
