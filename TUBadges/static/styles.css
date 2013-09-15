@@ -27,6 +27,10 @@ h1 {
     text-align:left;
 }
 
+    h1.inline {
+        display: inline-block;
+    }
+
 a {
     text-decoration:none;
     color:#0070af;
@@ -165,6 +169,11 @@ a {
         white-space: normal;
     }
 
+    .title-actions {
+        display: inline-block;
+        margin: 0 0 0 10px;
+    }
+
     .badges {
         position: relative;
         overflow: visible !important;
@@ -262,6 +271,8 @@ a {
             font-size:13px;
             color:#333333;
             margin: 7px 0 7px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
             .badge .info:last-of-type{

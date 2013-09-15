@@ -1,3 +1,4 @@
+
 $(function(){
     $('.badges').each(function(){
        $(this).isotope({
@@ -8,6 +9,7 @@ $(function(){
             masonry: { columnWidth: getColumnWidth(1) }
         });
     });
+
 
     resizeFormElements($('.modal'));
     watchBadgeTypeChange($('.modal'));
@@ -23,12 +25,18 @@ $(function(){
         });
     });
 
-    setupBadgePresetForm($('.modal .contentbox'));
+    $('.badge.preset').each(function(){
+        setupBadgePreset($(this));
+    });
 
-    $('.badge.preset .active-area').click(function(e){
-        requestModal('/ajax/preset?id='+$(this).parent().data('id'), 450);
+    $('a[href="#add-preset"]').click(function(e){
+        requestModal('/ajax/presetform', setupBadgePresetForm);
         return false;
     });
+});
+
+$(window).load(function(){
+    $('.badges').isotope('reLayout');
 });
 
 $(window).smartresize(function(){
@@ -162,11 +170,11 @@ function slideToPage(target, from, to, itemsPerPage){
 /**
  * Loads HTML via AJAX from the given url and calls showModal
  */
-function requestModal(url, maxWidth){
+function requestModal(url, maxWidth, callback){
     $.ajax({
         'url': url,
         'success': function(data){
-            showModal(data, maxWidth);
+            showModal(data, maxWidth, callback);
         },
         'dataType': 'html'
     });
@@ -175,12 +183,19 @@ function requestModal(url, maxWidth){
 /**
  * Displays the given HTML in a modal window
  */
-function showModal(html, maxWidth){
+function showModal(html, maxWidth, callback){
+    if(typeof maxWidth === 'function') {
+        callback = maxWidth;
+        maxWidth = undefined;
+    }
     $('.modal .contentbox').css('max-width', maxWidth).html(html).append('<a href="#close" class="close"></a>').parent().fadeIn();
     $('.modal .contentbox .close').click(function(){
         hideModal();
         return false;
     });
+    if(callback && typeof callback === 'function'){
+        callback($('.modal .contentbox'));
+    }
 }
 
 /**
@@ -194,13 +209,27 @@ function hideModal(){
 
 
 /**
- * Badge Preset Form related funtions
+ * Badge Preset related funtions
  */
 function setupBadgePresetForm(container){
-    var currentShape = container.find('.shapes > li > a').first().addClass('selected').data('name');
-    var currentPattern = container.find('.patterns > li > a').first().addClass('selected').data('name');
-    var currentColor = 'ffcc00'
+
     var badgePreview = $('.badgecreator .preview img', container);
+    var parts = badgePreview.attr('src').split('?')[1].split('&');
+    var po = {};
+    for(var i=0; i<parts.length; i++){
+        parts[i] = parts[i].split('=');
+        po[parts[i][0]] = parts[i][1];
+    }
+
+    var currentShape, currentPattern, currentColor;
+    if(po.s) currentShape = container.find('.shapes > li > a[data-name="'+po.s+'"]').addClass('selected').data('name');
+    else currentShape = container.find('.shapes > li > a').first().addClass('selected').data('name');
+
+    if(po.p) currentPattern = container.find('.patterns > li > a[data-name="'+po.p+'"]').addClass('selected').data('name');
+    else currentPattern = container.find('.patterns > li > a').first().addClass('selected').data('name');
+
+    if(po.c) currentColor = po.c;
+    else currentColor = 'ffcc00';
 
     badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
 
@@ -222,19 +251,40 @@ function setupBadgePresetForm(container){
 
     $('input[type="button"].submit').click(function(e){
         e.preventDefault();
+        var pid = ($('#preset-id').val() != '')?$('#preset-id').val():null;
         $.ajax({
             'url': '/ajax/savepreset',
             'type': 'POST',
             'data': {
                 'name': $('#name').val(),
                 'img': badgePreview.attr('src'),
-                'keywords': $('#keywords').val()
+                'keywords': $('#keywords').val(),
+                'pid': pid
+            },
+            'success' : function(data){
+                if(!data.error){
+                    hideModal();
+                    $.ajax({
+                        'url': '/ajax/minpreset?id='+data.id,
+                        'type': 'GET',
+                        'success' : function(data){
+                            if(pid){
+                                $('.badges').isotope('remove', $('.badges .badge[data-id="'+pid+'"]'));
+                            }
+                            var item = $(data);
+                            $('.badges').isotope( 'insert', item);
+                            setupBadgePreset(item);
+                        }
+                    });
+                } else {
+                    alert(data.msg);
+                }
             }
         })
     });
 
     $("#shape-color").spectrum({
-        color: '#ffcc00',
+        color: currentColor,
         localStorageKey: 'shapeColors',
         showPalette: true,
         showSelectionPalette: true,
@@ -251,6 +301,22 @@ function setupBadgePresetForm(container){
             currentColor = color.toHexString().substr(1);
             badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
         }
+    });
+
+    $('.slider', container).each(function(){
+        setupSlider($(this));
+    });
+}
+
+function setupBadgePreset(item){
+    item.find('.active-area').click(function(e){
+        requestModal('/ajax/preset?id='+$(this).parent().data('id'), 450);
+        return false;
+    });
+
+    item.find('a[href="#edit"]').click(function(e){
+        requestModal('/ajax/presetform?id='+$(this).parent().parent().parent().data('id'), setupBadgePresetForm);
+        return false;
     });
 }
 

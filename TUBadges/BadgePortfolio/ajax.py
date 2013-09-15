@@ -8,6 +8,8 @@ from login_handler import *
 from random import choice
 import json
 import logging
+import os
+from os.path import isfile, join, isdir
 import re
 
 
@@ -45,15 +47,49 @@ def badge_preset_form(request):
         content = {}
         bu = get_loggedin_user(request)
         if bu.role == BadgeUser.PROFESSOR:
+            shapes = []
+            shape_path = 'static/images/shapes/'
+            for s in os.listdir(shape_path):
+                if isfile(join(shape_path, s)):
+                    shapes.append({
+                        'url': join('images/shapes/', s),
+                        'name': s.split('.')[0]
+                    })
+
+            patterns = []
+            pattern_path = 'static/images/patterns/'
+            for p in os.listdir(pattern_path):
+                if isfile(join(pattern_path, p)):
+                    p = p.replace('.svg', '')
+                    patterns.append({
+                        'url': '/bgsvg?p='+p,
+                        'name': p
+                    })
+
+            content.update({
+                'shapes': shapes,
+                'patterns': patterns,
+                'img': '/svg?p=carbon&s=addone&c=ffcc00',
+                'save_label': 'Preset erstellen',
+                'save_more_label': 'Preset und weiteres erstellen',
+                'form_action_label': 'erstellen'
+            })
+            content.update(csrf(request))
+
             if 'id' in request.GET and request.GET['id'] != '' and BadgePreset.objects.filter(id=request.GET['id']).exists():
                 bp = BadgePreset.objects.get(id=request.GET['id'])
                 if bp.owner_id == bu.id:
                     if bp.issued_badges.count() == 0:
                         content.update({
+                            'id': bp.id,
                             'name': bp.name,
                             'img': bp.img,
-                            'keywords': bp.keywords
+                            'keywords': bp.keywords,
+                            'save_label': 'Preset speichern',
+                            'save_more_label': 'Preset speichern und weiteres erstellen',
+                            'form_action_label': 'editieren'
                         })
+
                         return render_to_response('badge_preset_form.html', content)
                     else:
                         return render_to_response('error.html', {'msg': 'Das Badge Preset wurde bereits verwendet und kann nicht mehr editiert werden.'})
@@ -61,6 +97,32 @@ def badge_preset_form(request):
                     return render_to_response('error.html', {'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'})
             else:
                 return render_to_response('badge_preset_form.html', content)
+        else:
+            return render_to_response('error.html', {'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'})
+    else:
+        return render_to_response('error.html', {'msg': 'Sie m&uuml;ssen eingeloggt sein.'})
+
+
+def badge_preset(request):
+    """
+    Returns the HTML for the badge preset list
+    :type request: HttpRequest
+    """
+    if is_logged_in(request):
+        content = {}
+        bu = get_loggedin_user(request)
+        if bu.role == BadgeUser.PROFESSOR:
+            if 'id' in request.GET and request.GET['id'] != '' and BadgePreset.objects.filter(id=request.GET['id']).exists():
+                bp = BadgePreset.objects.get(id=request.GET['id'])
+                if bp.owner_id == bu.id:
+                    content.update({
+                        'p': bp
+                    })
+                    return render_to_response('badge_preset.html', content)
+                else:
+                    return render_to_response('error.html', {'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'})
+            else:
+                return render_to_response('error.html', {'msg': 'Das Badge Preset existiert nicht.'})
         else:
             return render_to_response('error.html', {'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'})
     else:
@@ -254,7 +316,7 @@ def save_badge_preset(request):
 
                     bp.save()
 
-                    if 'keywords' in request.POST:
+                    if 'keywords' in request.POST and request.POST['keywords'] != '':
                         kw = request.POST['keywords'].split(',')
                         for k in kw:
                             k = k.strip()
