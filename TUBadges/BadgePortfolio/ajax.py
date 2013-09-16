@@ -288,9 +288,9 @@ def save_badge_preset(request):
         bu = get_loggedin_user(request)
         if bu.role == BadgeUser.PROFESSOR:
             bp = None
-            if 'pid' in request.POST and request.POST['pid'] != '':
-                if BadgePreset.objects.filter(id=request.POST['pid']).exists():
-                    bp = BadgePreset.objects.get(id=request.POST['pid'])
+            if 'id' in request.POST and request.POST['id'] != '':
+                if BadgePreset.objects.filter(id=request.POST['id']).exists():
+                    bp = BadgePreset.objects.get(id=request.POST['id'])
                     if bp.owner_id != bu.id:
                         bp = None
                         result = {
@@ -376,6 +376,52 @@ def duplicate_badge_preset(request):
                     result = {
                         'error': False,
                         'id': bpn.id
+                    }
+                else:
+                    result = {
+                        'error': True,
+                        'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'
+                    }
+            else:
+                result = {
+                    'error': True,
+                    'msg': 'Badge Preset existiert nicht.'
+                }
+        else:
+            result = {
+                'error': True,
+                'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'
+            }
+    else:
+        result = {
+            'error': True,
+            'msg': 'Sie m&uuml;ssen eingeloggt sein.'
+        }
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
+
+
+def delete_badge_preset(request):
+    """
+    Tries to delete the requested badge preset and returns a JSON response
+    :type request: HttpRequest
+    """
+    result = {'error': True, 'msg': ''}
+
+    if is_logged_in(request):
+        bu = get_loggedin_user(request)
+        if bu.role == BadgeUser.PROFESSOR:
+            if 'id' in request.POST and request.POST['id'] != '' and BadgePreset.objects.filter(id=request.POST['id']).exists():
+                bp = BadgePreset.objects.get(id=request.POST['id'])
+                if bp.owner_id == bu.id:
+                    if bp.issued_badges.count() == 0:
+                        bp.delete()
+                    #else:
+                        #TODO hide preset if already used
+
+                    result = {
+                        'error': False,
+                        'id': bp.id
                     }
                 else:
                     result = {

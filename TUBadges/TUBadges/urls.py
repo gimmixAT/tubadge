@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^ajax/minpreset$', 'BadgePortfolio.ajax.badge_preset'),
     url(r'^ajax/savepreset$', 'BadgePortfolio.ajax.save_badge_preset'),
     url(r'^ajax/duplicatepreset$', 'BadgePortfolio.ajax.duplicate_badge_preset'),
+    url(r'^ajax/deletepreset$', 'BadgePortfolio.ajax.delete_badge_preset'),
     url(r'^ajax/togglepublic$', 'BadgePortfolio.ajax.toggle_public'),
     url(r'^ajax/users$', 'BadgePortfolio.ajax.get_users'),
     url(r'^ajax/courses$', 'BadgePortfolio.ajax.get_courses')

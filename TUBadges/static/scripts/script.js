@@ -207,6 +207,9 @@ function hideModal(){
     });
 }
 
+function modalAlert(msg){
+    alert(msg);
+}
 
 /**
  * Badge Preset related funtions
@@ -259,7 +262,7 @@ function setupBadgePresetForm(container){
                 'name': $('#name').val(),
                 'img': badgePreview.attr('src'),
                 'keywords': $('#keywords').val(),
-                'pid': pid
+                'id': pid
             },
             'success' : function(data){
                 if(!data.error){
@@ -277,7 +280,7 @@ function setupBadgePresetForm(container){
                         }
                     });
                 } else {
-                    alert(data.msg);
+                    modalAlert(data.msg);
                 }
             }
         })
@@ -316,6 +319,27 @@ function setupBadgePreset(item){
 
     item.find('a[href="#edit"]').click(function(e){
         requestModal('/ajax/presetform?id='+$(this).parent().parent().parent().data('id'), setupBadgePresetForm);
+        return false;
+    });
+
+    item.find('a[href="#delete"]').click(function(e){
+        var pid = $(this).parent().parent().parent().data('id');
+        var item = $('.badges .badge[data-id="'+pid+'"]').clone();
+        $('.badges').isotope('remove', $('.badges .badge[data-id="'+pid+'"]'));
+        $.ajax({
+            'url': '/ajax/deletepreset',
+            'data': {
+                'id' : pid
+            },
+            'type': 'POST',
+            'success' : function(data){
+                if(data.error){
+                    $('.badges').isotope('insert', item);
+                    setupBadgePreset(item);
+                    modalAlert(data.msg);
+                }
+            }
+        });
         return false;
     });
 }
