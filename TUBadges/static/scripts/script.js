@@ -10,21 +10,6 @@ $(function(){
         });
     });
 
-
-    resizeFormElements($('.modal'));
-    watchBadgeTypeChange($('.modal'));
-
-    $('.slider').each(function(){
-        setupSlider($(this));
-    });
-
-    $('.autocomplete').each(function(){
-        $(this).autocomplete({
-            serviceUrl: $(this).data('serviceurl'),
-            paramName: 'q'
-        });
-    });
-
     $('.badge.preset').each(function(){
         setupBadgePreset($(this));
     });
@@ -186,7 +171,7 @@ function requestModal(url, maxWidth, callback){
 function showModal(html, maxWidth, callback){
     if(typeof maxWidth === 'function') {
         callback = maxWidth;
-        maxWidth = undefined;
+        maxWidth = "";
     }
     $('.modal .contentbox').css('max-width', maxWidth).html(html).append('<a href="#close" class="close"></a>').parent().fadeIn();
     $('.modal .contentbox .close').click(function(){
@@ -212,9 +197,69 @@ function modalAlert(msg){
 }
 
 /**
+ * Form related functions
+ */
+
+function setupForm(container){
+    resizeFormElements(container);
+    watchBadgeTypeChange(container);
+
+    container.find('.autocomplete').each(function(){
+        $(this).autocomplete({
+            serviceUrl: $(this).data('serviceurl'),
+            paramName: 'q'
+        });
+    });
+}
+
+/**
+ * Badge Issue related funtions
+ */
+function setupBadgeForm(container){
+    setupForm(container);
+
+    $('input[type="button"].submit').click(function(e){
+        e.preventDefault();
+        var pid = $('#preset-id').val();
+        $.ajax({
+            'url': '/ajax/issue',
+            'type': 'POST',
+            'data': {
+                'name': $('#name').val(),
+                'img': badgePreview.attr('src'),
+                'keywords': $('#keywords').val(),
+                'pid': pid
+            },
+            'success' : function(data){
+                if(!data.error){
+                    hideModal();
+                    $.ajax({
+                        'url': '/ajax/minpreset?id='+data.id,
+                        'type': 'GET',
+                        'success' : function(data){
+                            if(pid){
+                                $('.badges').isotope('remove', $('.badges .badge[data-id="'+pid+'"]'));
+                            }
+                            var item = $(data);
+                            $('.badges').isotope( 'insert', item);
+                            setupBadgePreset(item);
+                        }
+                    });
+                } else {
+                    modalAlert(data.msg);
+                }
+            }
+        });
+    });
+}
+
+
+/**
  * Badge Preset related funtions
  */
 function setupBadgePresetForm(container){
+
+    setupForm(container);
 
     var badgePreview = $('.badgecreator .preview img', container);
     var parts = badgePreview.attr('src').split('?')[1].split('&');
@@ -283,7 +328,7 @@ function setupBadgePresetForm(container){
                     modalAlert(data.msg);
                 }
             }
-        })
+        });
     });
 
     $("#shape-color").spectrum({
@@ -317,6 +362,11 @@ function setupBadgePreset(item){
         return false;
     });
 
+    item.find('a[href="#issue"]').click(function(e){
+        requestModal('/ajax/issueform?pid='+$(this).parent().parent().parent().data('id'), setupBadgeForm);
+        return false;
+    });
+
     item.find('a[href="#edit"]').click(function(e){
         requestModal('/ajax/presetform?id='+$(this).parent().parent().parent().data('id'), setupBadgePresetForm);
         return false;
@@ -336,6 +386,32 @@ function setupBadgePreset(item){
                 if(data.error){
                     $('.badges').isotope('insert', item);
                     setupBadgePreset(item);
+                    modalAlert(data.msg);
+                }
+            }
+        });
+        return false;
+    });
+
+    item.find('a[href="#duplicate"]').click(function(e){
+        $.ajax({
+            'url': '/ajax/duplicatepreset',
+            'type': 'POST',
+            'data': {
+                'id': $(this).parent().parent().parent().data('id')
+            },
+            'success' : function(data){
+                if(!data.error){
+                    $.ajax({
+                        'url': '/ajax/minpreset?id='+data.id,
+                        'type': 'GET',
+                        'success' : function(data){
+                            var item = $(data);
+                            $('.badges').isotope( 'insert', item);
+                            setupBadgePreset(item);
+                        }
+                    });
+                } else {
                     modalAlert(data.msg);
                 }
             }

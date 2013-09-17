@@ -25,9 +25,7 @@ def issue_badge_form(request):
             if 'pid' in request.GET and request.GET['pid'] != '' and BadgePreset.objects.filter(id=request.GET['pid']).exists():
                 bp = BadgePreset.objects.get(id=request.GET['pid'])
                 content.update({
-                    'name': bp.name,
-                    'img': bp.img,
-                    'keywords': bp.keywords,
+                    'p': bp,
                     'issuer': bu.firstname+' '+bu.lastname,
                     'issuer_id': bu.id
                 })
@@ -369,8 +367,9 @@ def duplicate_badge_preset(request):
                     bpn = BadgePreset()
                     bpn.name = bp.name + "*"
                     bpn.img = bp.img
-                    bpn.keywords = bp.keywords
                     bpn.owner = bp.owner
+                    bpn.save()
+                    bpn.keywords = bp.keywords.all()
                     bpn.save()
 
                     result = {
