@@ -164,9 +164,8 @@ def issue_badge(request):
     if is_logged_in(request):
         bu = get_loggedin_user(request)
         if bu.role == BadgeUser.PROFESSOR:
-            if 'awardee_id' in request.POST:
+            if 'awardee_id' in request.POST and BadgeUser.objects.filter(id=request.POST['awardee_id']).exists():
                 #if a user id is given
-#TODO: sanity check id
                 awardee = BadgeUser.objects.get(id=request.POST['awardee_id'])
             elif 'awardee' in request.POST:
                 # if no user id is given check if the name is a studentID and
@@ -198,7 +197,6 @@ def issue_badge(request):
                     if bp.owner_id == bu.id:
                         b = Badge()
                         b.name = bp.name
-                        b.keywords = bp.keywords
                         b.img = bp.img
                         b.preset = bp
                     else:
@@ -206,20 +204,18 @@ def issue_badge(request):
                             'error': True,
                             'msg': 'Sie haben nicht die n&ouml;tigen Rechte um dieses Badge Preset zu verwenden.'
                         }
-                elif 'name' in request.POST and 'img' in request.POST:
-                    b = Badge()
-                    b.name = request.POST['name']
-                    b.img = request.POST['img']
+                #elif 'name' in request.POST and 'img' in request.POST:
+                #    b = Badge()
+                #    b.name = request.POST['name']
+                #    b.img = request.POST['img']
                 else:
                     result = {
                         'error': True,
                         'msg': 'Es fehlt ein Parameter'
                     }
 
-                if b and 'rating' in request.POST and request.POST['rating'] >= 0 and request.POST['rating'] <= 3:
+                if b and 'rating' in request.POST and int(request.POST['rating']) >= 0 and int(request.POST['rating']) <= 3:
 #TODO: sanity checking POST
-                    if 'keywords' in request.POST:
-                        b.keywords += request.POST['keywords']
 
                     b.awardee = awardee
 
@@ -229,27 +225,54 @@ def issue_badge(request):
                         b.awarder = bu.id
 
 
-                    b.rating = request.POST['rating']
+                    b.rating = int(request.POST['rating'])
                     b.issuer = bu
+
+                    if 'comment' in request.POST:
+                        b.comment = request.POST['comment']
 
                     if 'students' in request.POST:
                         b.candidates = request.POST['students']
                     else:
                         b.candidates = 1
 
-                    b.proof_url = request.POST['proof']
+                    b.proof = request.POST['proof']
 
                     if 'lva_id' not in request.POST or request.POST['lva_id'] == '':
-                        if 'lva_title' in request.POST and request.POST['lva_title'] != '':
-                            lva = LVA()
-                            lva.title = request.POST['lva_title']
-                            lva.institute = request.POST['lva_institute']
-                            lva.number = request.POST['lva_number']
-                            lva.students = request.POST['students']
-                            lva.save()
-                            b.lva = lva
+                        if 'lva' in request.POST and request.POST['lva'] != '':
+                            lvap = re.match('^([0-9]{3})\.([0-9]{3}) ?(.+)$', request.POST['lva'])
+                            if lvap:
+                                lva = LVA()
+                                lva.title = lvap.group(4)
+                                lva.institute = lvap.group(2)
+                                lva.number = lvap.group(3)
+                                if 'students' in request.POST:
+                                    lva.students = request.POST['students']
+                                else:
+                                    lva.students = 1
+                                lva.save()
+                                b.lva = lva
+                            else:
+                                b.context = request.POST['lva']
                     else:
                         b.lva = LVA.objects.get(id=request.POST['lva_id'])
+
+                    b.save()
+
+                    if bp:
+                        b.keywords = bp.keywords.all()
+
+                    if 'keywords' in request.POST:
+                        kw = request.POST['keywords'].split(',')
+                        for k in kw:
+                            k = k.strip()
+                            if Tag.objects.filter(name=k).exists():
+                                ko = Tag.objects.get(name=k)
+                            else:
+                                ko = Tag()
+                                ko.name = k
+                                ko.save()
+                            b.keywords.add(ko)
 
                     b.save()
 

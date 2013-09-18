@@ -462,12 +462,18 @@ a {
         display:block;
         background:transparent;
         border:0;
-        border-bottom:1px solid #666666;
+        border-bottom:1px solid #111111;
         width:100%;
         margin:10px 0 10px 0;
         -moz-box-shadow: 1px -5px 0px #ffffff, 1px 0px 0px #111111, -1px -5px 0px #ffffff, -1px 0px 0px #111111;
         box-shadow: 1px -5px 0px #ffffff, 1px 0px 0px #111111, -1px -5px 0px #ffffff, -1px 0px 0px #111111;
         height: 36px;
+    }
+
+    input.error, textarea.error, select.error {
+        border-bottom:1px solid #cc1111;
+        -moz-box-shadow: 1px -5px 0px #ffffff, 1px 0px 0px #cc1111, -1px -5px 0px #ffffff, -1px 0px 0px #cc1111;
+        box-shadow: 1px -5px 0px #ffffff, 1px 0px 0px #cc1111, -1px -5px 0px #ffffff, -1px 0px 0px #cc1111;
     }
 
     select {

@@ -246,37 +246,47 @@ function setupBadgeForm(container){
         }
     });
 
-    $('input[type="button"].submit').click(function(e){
+    container.find('input[type="button"].submit').click(function(e){
         e.preventDefault();
-        var pid = $('#preset-id').val();
-        $.ajax({
-            'url': '/ajax/issue',
-            'type': 'POST',
-            'data': {
 
-                'keywords': $('#keywords').val(),
-                'pid': pid
-            },
-            'success' : function(data){
-                if(!data.error){
-                    hideModal();
-                    $.ajax({
-                        'url': '/ajax/minpreset?id='+data.id,
-                        'type': 'GET',
-                        'success' : function(data){
-                            if(pid){
-                                $('.badges').isotope('remove', $('.badges .badge[data-id="'+pid+'"]'));
-                            }
-                            var item = $(data);
-                            $('.badges').isotope( 'insert', item);
-                            setupBadgePreset(item);
-                        }
-                    });
-                } else {
-                    modalAlert(data.msg);
+        var data = {
+            'keywords': $('#keywords').val(),
+            'pid': $('#preset-id').val(),
+            'rating': $('#rating').val()
+        }
+
+        container.find('.error').removeClass('error');
+
+        var ok = true;
+
+        if($('#awardee_id').val() != '') data['awardee_id'] = $('#awardee_id').val();
+        else if ($('#awardee').val() != '') data['awardee'] = $('#awardee').val();
+        else { $('#awardee').addClass('error'); ok = false; }
+
+        if($('#lva_id').val() != '') data['lva_id'] = $('#lva_id').val();
+        else if ($('#lva').val() != '') data['lva'] = $('#lva').val();
+        else { $('#lva').addClass('error'); ok = false; }
+
+        if($('#students').val() != '' || $('#students').val() > 0) data['students'] = $('#students').val();
+        else { $('#students').addClass('error'); ok = false; }
+
+        if($('#proof').val() != '') data['proof'] = $('#proof').val();
+        else { $('#proof').addClass('error'); ok = false; }
+
+        if(ok){
+            $.ajax({
+                'url': '/ajax/issue',
+                'type': 'POST',
+                'data': data,
+                'success' : function(data){
+                    if(!data.error){
+                        hideModal();
+                    } else {
+                        modalAlert(data.msg);
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 }
 
@@ -324,7 +334,7 @@ function setupBadgePresetForm(container){
         return false;
     });
 
-    $('input[type="button"].submit').click(function(e){
+    container.find('input[type="button"].submit').click(function(e){
         e.preventDefault();
         var pid = ($('#preset-id').val() != '')?$('#preset-id').val():null;
         $.ajax({

@@ -84,7 +84,7 @@ class LVA(models.Model):
     students = models.IntegerField()
 
     def __unicode__(self):
-        return unicode(self.institute)+"."+unicode(self.number)+" "+self.title
+        return (self.institute and unicode(self.institute)+"." or "") + (self.number and unicode(self.number)+" " or "") + self.title
 
     class Meta:
         unique_together = ('institute', 'number')
@@ -114,8 +114,10 @@ class Badge(models.Model):
     name = models.CharField(max_length=200)
     img = models.CharField(max_length=200)
     keywords = models.ManyToManyField(Tag)
-    proof_url = models.URLField()
-    lva = models.ForeignKey(LVA, related_name='awarded_badges')
+    proof = models.TextField()
+    comment = models.TextField()
+    lva = models.ForeignKey(LVA, related_name='awarded_badges', null=True)
+    context = models.CharField(max_length=100, blank=True, null=True)
     public = models.BooleanField(default=False)
     candidates = models.IntegerField()
 
