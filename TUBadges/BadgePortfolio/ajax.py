@@ -166,6 +166,7 @@ def issue_badge(request):
         if bu.role == BadgeUser.PROFESSOR:
             if 'awardee_id' in request.POST:
                 #if a user id is given
+#TODO: sanity check id
                 awardee = BadgeUser.objects.get(id=request.POST['awardee_id'])
             elif 'awardee' in request.POST:
                 # if no user id is given check if the name is a studentID and
@@ -490,7 +491,7 @@ def get_user(request):
     return HttpResponse(json.dumps(result), content_type="application/json")
 
 
-def get_users(request):
+def get_users(request, students=False):
     """
     Returns the matching users and returns a list in JSON
     :type request: HttpRequest
@@ -502,11 +503,15 @@ def get_users(request):
                 if u:
                     sugg = []
                     for user in u:
-                        sugg.append({
-                            'value': str(user.student_id) + ', ' + user.firstname + ' ' + user.lastname,
-                            'data': user.id
-                        })
-                    result = {'error':False, 'suggestions': sugg}
+                        if not students or user.role == BadgeUser.STUDENT:
+                            sugg.append({
+                                'value': str(user.student_id) + ', ' + user.firstname + ' ' + user.lastname,
+                                'data': user.id
+                            })
+                    if len(sugg) > 0:
+                        result = {'error': False, 'suggestions': sugg}
+                    else:
+                        result = {'error': True, 'msg': 'Kein User gefunden.', 'suggestions': []}
                 else:
                     result = {'error': True, 'msg': 'Kein User gefunden.', 'suggestions': []}
             else:

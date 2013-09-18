@@ -203,13 +203,6 @@ function modalAlert(msg){
 function setupForm(container){
     resizeFormElements(container);
     watchBadgeTypeChange(container);
-
-    container.find('.autocomplete').each(function(){
-        $(this).autocomplete({
-            serviceUrl: $(this).data('serviceurl'),
-            paramName: 'q'
-        });
-    });
 }
 
 /**
@@ -218,6 +211,41 @@ function setupForm(container){
 function setupBadgeForm(container){
     setupForm(container);
 
+    container.find('#lva').each(function(){
+        $(this).autocomplete({
+            serviceUrl: $(this).data('serviceurl'),
+            paramName: 'q',
+            onSelect: function(d){
+                $('#lva_id').val(d.data.id);
+                $('#students').val(d.data.students);
+            }
+        });
+    });
+
+    container.find('#awardee').each(function(){
+        var lastValue = '';
+        $(this).change(function(){
+            if($(this).val() != lastValue) {
+                $('#awardee_id').val('');
+            }
+        }).autocomplete({
+            serviceUrl: $(this).data('serviceurl'),
+            paramName: 'q',
+            onSelect: function(d){
+                lastValue = d.value;
+                $('#awardee_id').val(d.data);
+            }
+        });
+    });
+
+    container.find('#awarder').data('oldvalue', container.find('#awarder').val()).change(function(){
+        if($(this).val() == $(this).data('oldvalue')){
+            $('.opt.issuer').fadeOut();
+        } else {
+            $('.opt.issuer').fadeIn();
+        }
+    });
+
     $('input[type="button"].submit').click(function(e){
         e.preventDefault();
         var pid = $('#preset-id').val();
@@ -225,8 +253,7 @@ function setupBadgeForm(container){
             'url': '/ajax/issue',
             'type': 'POST',
             'data': {
-                'name': $('#name').val(),
-                'img': badgePreview.attr('src'),
+
                 'keywords': $('#keywords').val(),
                 'pid': pid
             },
