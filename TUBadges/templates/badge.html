@@ -1,0 +1,17 @@
+            <div class="badge box{% if b.public %} public{% endif %} {{ b.rating_name|lower }}" data-id="{{ b.id }}">
+                <div class="image"><div class="crop"><object data="{{ b.img }}"><img src="{{ b.img }}" alt="badge image"/></object></div></div>
+                <div class="value">
+                    <div class="indicator"><div class="fill" style="height:{{ b.rarity_percent }}%"></div></div>
+                    <div class="overlay box">
+                        <span class="label">Typ:</span> {{ b.rating_name }}<br/>
+                        <span class="label">Vertrauen:</span> {{ b.value_percent }}%<br/>
+                        <span class="label">Häufigkeit:</span> {{ b.issued }} / {{ b.candidates }}
+                    </div>
+                </div>
+                <a class="public-indicator" href="#toggle-public"></a>
+                <h2>{{ b.name }}</h2>
+                <div class="info">
+                    <span class="label">von</span> {{ b.awarder_name }}<br/>
+                    {% if b.via %}<span class="label">via</span> {{ b.via }}{% endif %}
+                </div>
+            </div>

@@ -73,7 +73,7 @@ class BadgeUser(models.Model):
     def credibility(self, rating):
         bc = self.issued_badges.filter(rating=rating).count()
         tbc = self.issued_badges.count()
-        return 1 - pow((float(bc) / float(tbc)), Badge.factor[self.value])
+        return 1 - pow((float(bc) / float(tbc)), Badge.factor(rating))
 
 
 class LVA(models.Model):
@@ -102,9 +102,9 @@ class Badge(models.Model):
     SILVER = 1
     BRONZE = 0
     BADGE_VALUE = (
-        (GOLD, 'Gold'),
+        (BRONZE, 'Bronze'),
         (SILVER, 'Silber'),
-        (BRONZE, 'Bronze')
+        (GOLD, 'Gold')
     )
     awardee = models.ForeignKey(BadgeUser, related_name='my_badges')
     issuer = models.ForeignKey(BadgeUser, related_name='issued_badges')
@@ -121,15 +121,53 @@ class Badge(models.Model):
     public = models.BooleanField(default=False)
     candidates = models.IntegerField()
 
+    class Meta:
+        unique_together = ('awardee', 'preset')
+
+    @property
+    def rating_name(self):
+        return Badge.BADGE_VALUE[self.rating][1]
+
+    @property
+    def awarder_name(self):
+        if self.awarder.isnumeric() and BadgeUser.objects.filter(id=int(self.awarder)).exists():
+            a = BadgeUser.objects.get(id=int(self.awarder));
+            return a.firstname+' '+a.lastname
+        else:
+            return self.awarder
+
+    @property
+    def via(self):
+        if self.issuer_id != int(self.awarder):
+            return self.issuer.firstname+' '+self.issuer.lastname
+        else:
+            return None
+
+    @property
     def rarity(self):
+        return 1 - pow(float(self.issued) / float(self.candidates), Badge.factor(self.rating))
+
+    @property
+    def rarity_percent(self):
+        return str(int(round(self.rarity * 100)))
+
+    @property
+    def issued(self):
         c = 1
-        if self.preset is not None:
-            c = self.preset.issued_badges.count()
+        if self.preset:
+            c = Badge.objects.filter(preset_id=self.preset_id).count()
 
-        return 1 - pow(float(c) / float(self.candidates), Badge.factor[self.rating]);
+        return c
 
+    @property
     def value(self):
-        self.issuer.credibility(self.rating)
+        o = self.issuer.credibility(self.rating)
+        return o
 
-    def factor(self, rating):
+    @property
+    def value_percent(self):
+        return str(int(round(self.value * 100)))
+
+    @staticmethod
+    def factor(rating):
         return [2, 1, 0.5][rating]

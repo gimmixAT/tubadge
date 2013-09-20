@@ -140,7 +140,8 @@ def badge_preset_detail(request):
                 bp = BadgePreset.objects.get(id=request.GET['id'])
                 if bp.owner_id == bu.id:
                     content.update({
-                        'bp': bp
+                        'bp': bp,
+                        'issued': bp.issued_badges.all().count()
                     })
                     return render_to_response('badge_preset_detail.html', content)
                 else:
@@ -195,10 +196,16 @@ def issue_badge(request):
                 if 'pid' in request.POST and BadgePreset.objects.filter(id=request.POST['pid']).exists():
                     bp = BadgePreset.objects.get(id=request.POST['pid'])
                     if bp.owner_id == bu.id:
-                        b = Badge()
-                        b.name = bp.name
-                        b.img = bp.img
-                        b.preset = bp
+                        if not awardee.my_badges.filter(preset_id=bp.id).exists():
+                            b = Badge()
+                            b.name = bp.name
+                            b.img = bp.img
+                            b.preset = bp
+                        else:
+                            result = {
+                                'error': True,
+                                'msg': 'Der Empf&auml;nger hat diesen Badge bereits.'
+                            }
                     else:
                         result = {
                             'error': True,
@@ -280,7 +287,7 @@ def issue_badge(request):
                         'error': False,
                         'id': b.id
                     }
-                else:
+                elif 'error' not in result:
                     result = {
                         'error': True,
                         'msg': 'Es fehlt ein oder mehrere Parameter.'
