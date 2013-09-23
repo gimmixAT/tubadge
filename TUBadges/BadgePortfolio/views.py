@@ -49,7 +49,8 @@ def badges(request, uid=None):
     elif is_logged_in(request):
         content = {
             'badges': Badge.objects.filter(awardee=request.session['uID']),
-            'page': 'Meine Badges'
+            'page': 'Meine Badges',
+            'title': 'Meine Badges'
         }
         content.update(get_header_content(request))
 

@@ -182,6 +182,14 @@ function showModal(html, maxWidth, callback){
         hideModal();
         return false;
     });
+    $('.modal .contentbox').click(function(e){
+        e.stopPropagation();
+        return false;
+    });
+    $('.modal').click(function(e){
+        hideModal();
+        return false;
+    });
     if(callback && typeof callback === 'function'){
         callback($('.modal .contentbox'));
     }

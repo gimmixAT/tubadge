@@ -663,7 +663,7 @@ a {
         color:#111111;
     }
 
-    .modal .close{
+    .modal .contentbox > a.close{
         position: absolute;
         right: 25px;
         top: 25px;
@@ -676,7 +676,7 @@ a {
         z-index: 10;
     }
 
-        .modal .close:hover {
+        .modal .contentbox > a.close:hover {
             opacity: 1;
         }
 
@@ -900,7 +900,7 @@ a {
             font-style: normal;
             font-weight: 700;
             position: absolute;
-            margin: -10px 0 0 -27px;
+            margin: -11px 0 0 -27px;
             color: #999999;
         }
 
