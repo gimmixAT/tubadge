@@ -7,8 +7,10 @@
                 </div>
                 <h2>{{ bp.name }}</h2>
                 <div class="line"></div>
+                {% if bp.keywords.all|length > 0 %}
                 <div class="info">
                     <h3>Schlagwörter</h3>
                     {{ bp.keywords.all|join:", " }}
                 </div>
+                {% endif %}
             </div>

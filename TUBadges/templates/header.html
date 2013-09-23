@@ -26,12 +26,14 @@
                 <li><a href="#issue_badge">Badge vergeben</a></li>
                 {% endif %}
             </ul>
+            {% if username %}
             <div id="useractions">
                 {{ greeting }},<br/>
                 <b>{{ username }}</b>
 
                 <span class="logout">&raquo; <a href="/?logout">logout</a></span>
             </div>
+            {% endif %}
         </div>
         {% endif %}
         <div id="content">

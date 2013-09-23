@@ -21,7 +21,7 @@ def login(request):
     return render_to_response('login.html', c)
 
 
-def badges(request):
+def badges(request, uid=None):
     """
     The Badges view.
     If an uid is given this view will list all public badges of the given User.
@@ -30,7 +30,16 @@ def badges(request):
     """
     check_if_login(request)
     if 'uid' in request.GET:
-        content = {'badges': Badge.objects.filter(awardee=request.GET['uid'], public=True)}
+        uid = request.GET['uid']
+
+    if uid and BadgeUser.objects.filter(id=uid).exists():
+        bu = BadgeUser.objects.get(id=uid)
+        content = {
+            'badges': Badge.objects.filter(awardee=uid, public=True),
+            'public': True,
+            'title': bu.firstname+' '+bu.lastname+'s Badges',
+            'page': bu.firstname+' '+bu.lastname+'s Badges'
+        }
         content.update(get_header_content(request))
 
         return render_to_response(
@@ -38,7 +47,10 @@ def badges(request):
             content
         )
     elif is_logged_in(request):
-        content = {'badges': Badge.objects.filter(awardee=request.session['uID'])}
+        content = {
+            'badges': Badge.objects.filter(awardee=request.session['uID']),
+            'page': 'Meine Badges'
+        }
         content.update(get_header_content(request))
 
         return render_to_response(

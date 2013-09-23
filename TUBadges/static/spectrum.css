@@ -406,11 +406,11 @@ License: MIT
 {
     color: #999999; !important;
     padding:2px;
-    margin:0 10px 0 0;
+    margin:0 9px 0 0;
     vertical-align: middle;
     text-decoration:none;
     font-size:14px;
-    line-height: 42px;
+    line-height:38px;
 
 }
 .sp-cancel:hover

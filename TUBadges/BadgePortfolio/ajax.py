@@ -36,6 +36,28 @@ def issue_badge_form(request):
         return render_to_response('error.html', {'msg': 'Sie m&uuml;ssen eingeloggt sein.'})
 
 
+def badge_detail(request):
+    """
+    Returns the HTML for the badge
+    :type request: HttpRequest
+    """
+    if 'id' in request.GET and request.GET['id'] != '' and Badge.objects.filter(id=request.GET['id']).exists():
+        b = Badge.objects.get(id=request.GET['id'])
+        bu = get_loggedin_user(request)
+        if b.public or (bu and b.awardee_id == bu.id):
+            content = {
+                'b': b,
+                'proof': b.proof.replace('http://', '').replace('https://', ''),
+                'link': re.match('^https?://', b.proof)
+            }
+
+            return render_to_response('badge_detail.html', content)
+        else:
+            return render_to_response('error.html', {'msg': 'Sie haben nicht die n&ouml;tigen Rechte.'})
+    else:
+        return render_to_response('error.html', {'msg': 'Es fehlt ein Parameter oder dieser ist ung&uuml;ltig.'})
+
+
 def badge_preset_form(request):
     """
     Returns the HTML for the badge preset form
@@ -103,7 +125,7 @@ def badge_preset_form(request):
 
 def badge_preset(request):
     """
-    Returns the HTML for the badge preset list
+    Returns the HTML for the badge preset
     :type request: HttpRequest
     """
     if is_logged_in(request):
@@ -230,7 +252,6 @@ def issue_badge(request):
                         b.awarder = request.POST['awarder']
                     else:
                         b.awarder = bu.id
-
 
                     b.rating = int(request.POST['rating'])
                     b.issuer = bu
@@ -483,7 +504,7 @@ def toggle_public(request):
     :type request: HttpRequest
     """
     if is_logged_in(request):
-        if 'bid' in request.POST and request.POST['id'] != '' and Badge.objects.filter(id=request.POST['id']).exists():
+        if 'id' in request.POST and request.POST['id'] != '' and Badge.objects.filter(id=request.POST['id']).exists():
             badge = Badge.objects.get(id=request.POST['id'])
             if badge.awardee.id == get_loggedin_user(request).id:
                 badge.public = not badge.public

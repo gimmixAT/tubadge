@@ -138,7 +138,7 @@ class Badge(models.Model):
 
     @property
     def via(self):
-        if self.issuer_id != int(self.awarder):
+        if not self.awarder.isnumeric() or self.issuer_id != int(self.awarder):
             return self.issuer.firstname+' '+self.issuer.lastname
         else:
             return None

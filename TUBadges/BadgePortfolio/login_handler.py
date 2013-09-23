@@ -24,7 +24,10 @@ def check_if_login(request):
 
 
 def get_loggedin_user(request):
-    return BadgeUser.objects.get(id=request.session['uID'])
+    if 'uID' in request.session:
+        return BadgeUser.objects.get(id=request.session['uID'])
+    else:
+        return None
 
 
 def is_logged_in(request):

@@ -14,6 +14,10 @@ $(function(){
         setupBadgePreset($(this));
     });
 
+    $('.badge:not(.preset)').each(function(){
+        setupBadge($(this));
+    });
+
     $('a[href="#add-preset"]').click(function(e){
         requestModal('/ajax/presetform', setupBadgePresetForm);
         return false;
@@ -251,6 +255,7 @@ function setupBadgeForm(container){
 
         var data = {
             'keywords': $('#keywords').val(),
+            'comment': $('#comment').val(),
             'pid': $('#preset-id').val(),
             'rating': $('#rating').val()
         }
@@ -273,6 +278,8 @@ function setupBadgeForm(container){
         if($('#proof').val() != '') data['proof'] = $('#proof').val();
         else { $('#proof').addClass('error'); ok = false; }
 
+        if($('#awarder').val() != $('#awarder').data('oldvalue')) data['awarder'] = $('#awarder').val();
+
         if(ok){
             $.ajax({
                 'url': '/ajax/issue',
@@ -288,6 +295,35 @@ function setupBadgeForm(container){
             });
         }
     });
+}
+
+function setupBadge(item){
+    item.find('.active-area').click(function(e){
+        requestModal('/ajax/badge?id='+$(this).parent().data('id'), 450);
+        return false;
+    });
+
+    item.find('a[href="#toggle-public"]').click(function(e){
+        var pid = $(this).parent().data('id');
+        $(this).parent().toggleClass('public');
+        $(this).attr('title', ($(this).parent().hasClass('public'))?'Veröffentlichung rückgängig machen':'Veröffentlichen');
+        var _this = this;
+        $.ajax({
+            'url': '/ajax/togglepublic',
+            'data': {
+                'id' : pid
+            },
+            'type': 'POST',
+            'success' : function(data){
+                if(data.error){
+                   $(_this).parent().toggleClass('public');
+                   $(_this).attr('title', ($(this).parent().hasClass('public'))?'Veröffentlichung rückgängig machen':'Veröffentlichen')
+                }
+            }
+        });
+        return false;
+    });
+
 }
 
 

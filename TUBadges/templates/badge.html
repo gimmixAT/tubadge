@@ -8,10 +8,11 @@
                         <span class="label">Häufigkeit:</span> {{ b.issued }} / {{ b.candidates }}
                     </div>
                 </div>
-                <a class="public-indicator" href="#toggle-public"></a>
+                {% if not public %}<a class="public-indicator" href="#toggle-public" title="{% if b.public %}Veröffentlichung rückgängig machen{% else %}Veröffentlichen{% endif %}"></a>{% endif %}
                 <h2>{{ b.name }}</h2>
                 <div class="info">
                     <span class="label">von</span> {{ b.awarder_name }}<br/>
                     {% if b.via %}<span class="label">via</span> {{ b.via }}{% endif %}
                 </div>
+                <a class="active-area" href="#details" title="Details"></a>
             </div>

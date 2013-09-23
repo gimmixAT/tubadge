@@ -366,6 +366,7 @@ a {
             top:5px;
             overflow:hidden;
             background: url('./images/eye.png') no-repeat 0 0;
+            z-index: 2;
         }
 
             .badge.public .public-indicator {
@@ -888,7 +889,7 @@ a {
             font-weight: 700;
             position: absolute;
             left:-30px;
-            top:-15px;
+            top:-3px;
             color: #999999;
         }
 
@@ -899,7 +900,7 @@ a {
             font-style: normal;
             font-weight: 700;
             position: absolute;
-            margin: -1px 0 0 -27px;
+            margin: -10px 0 0 -27px;
             color: #999999;
         }
 

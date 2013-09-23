@@ -1,29 +1,33 @@
-            <div class="badge big">
+            <div class="badge big {{ b.rating_name|lower }}">
                 <div class="top">
-                    <div class="image"><div class="crop"><img class="" src="/svg?" /></div></div>
+                    <div class="image"><div class="crop"><object data="{{ b.img }}"><img src="{{ b.img }}" alt="badge image"/></object></div></div>
                     <div class="info value">
-                        <span class="label">Typ</span> Silber<br/>
-                        <span class="label">Vertrauen</span> 40%<br/>
-                        <span class="label">Häufigkeit</span> 200/1239
+                        <span class="label">Typ</span> {{ b.rating_name }}<br/>
+                        <span class="label">Vertrauen</span> {{ b.value_percent }}%<br/>
+                        <span class="label">Häufigkeit</span> {{ b.issued }} / {{ b.candidates }}
                     </div>
                 </div>
-                <h2>Ein toller Badge</h2>
+                <h2>{{ b.name }}</h2>
                 <div class="info">
-                    <span class="label">Erhalten von</span> Awesome Inc. <span class="label">via</span> Peter Purgathofer<br/>
-                    <span class="label">in</span> 123.456 Projektpraktikum I <span class="label">WS 2012</span>
+                    <span class="label">von</span> {{ b.awarder_name }} {% if b.via %}<span class="label">via</span> {{ b.via }}{% endif %}<br/>
+                    <span class="label">in</span> {% if b.lva %}{{ b.lva }}{% else %}{{ b.context }}{% endif %}
                 </div>
+                {% if b.comment %}
                 <div class="line"></div>
                 <div class="quote">
-                    Max Mustermann hat in der LVA Projektpraktikum I gezeigt, dass er XY echt gut drauf hat.
+                   {{ b.comment }}
                 </div>
+                {% endif %}
                 <div class="line"></div>
                 <div class="info">
                     <h3>Leistung</h3>
-                    <a href="http://www.orf.at" target="_blank">www.orf.at</a>
+                    {% if link %}<a href="{{ b.proof }}" target="_blank">{% endif %}{{ proof }}{% if link %}</a>{% endif %}
                 </div>
+                {% if b.keywords.all|length > 0 %}
                 <div class="line"></div>
                 <div class="info">
                     <h3>Schlagwörter</h3>
-                    Ruby on Rails, COuchDB, Photoshop, Maya, Unity3D, Projektmanagement
+                    {{ b.keywords.all|join:", " }}
                 </div>
+                {% endif %}
             </div>

@@ -19,6 +19,8 @@ urlpatterns = patterns('',
 
 
     url(r'^$', 'BadgePortfolio.views.badges'),
+    url(r'^badges/?$', 'BadgePortfolio.views.badges'),
+    url(r'^badges/(?P<uid>\d+)/?$', 'BadgePortfolio.views.badges'),
     url(r'^presets/$', 'BadgePortfolio.views.presets'),
 
     url(r'^svg$', 'BadgePortfolio.svg.build_svg'),
@@ -26,6 +28,7 @@ urlpatterns = patterns('',
 
     url(r'^ajax/issueform$', 'BadgePortfolio.ajax.issue_badge_form'),
     url(r'^ajax/issue$', 'BadgePortfolio.ajax.issue_badge'),
+    url(r'^ajax/badge', 'BadgePortfolio.ajax.badge_detail'),
     url(r'^ajax/presetform$', 'BadgePortfolio.ajax.badge_preset_form'),
     url(r'^ajax/preset$', 'BadgePortfolio.ajax.badge_preset_detail'),
     url(r'^ajax/minpreset$', 'BadgePortfolio.ajax.badge_preset'),

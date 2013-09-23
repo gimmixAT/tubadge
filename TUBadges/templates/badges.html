@@ -1,6 +1,6 @@
 {% load staticfiles %}
-{% include 'header.html' with page='My Badges' menu_selected=0 %}
-        <h1>Meine Badges</h1>
+{% include 'header.html' with menu_selected=0 %}
+        <h1>{{ title }}</h1>
         <div class="badges">
             {% for b in badges %}
             {% include 'badge.html' %}
