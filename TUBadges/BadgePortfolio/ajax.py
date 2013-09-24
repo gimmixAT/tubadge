@@ -89,7 +89,7 @@ def badge_preset_form(request):
             content.update({
                 'shapes': shapes,
                 'patterns': patterns,
-                'img': '/svg?p=carbon&s=addone&c=ffcc00',
+                'img': '',
                 'save_label': 'Preset erstellen',
                 'save_more_label': 'Preset und weiteres erstellen',
                 'form_action_label': 'erstellen'
@@ -554,7 +554,7 @@ def get_users(request, students=False):
                 if u:
                     sugg = []
                     for user in u:
-                        if not students or user.role == BadgeUser.STUDENT:
+                        if (not students or user.role == BadgeUser.STUDENT) and ('pid' not in request.GET or not user.my_badges.filter(preset_id=request.GET['pid']).exists()):
                             sugg.append({
                                 'value': str(user.student_id) + ', ' + user.firstname + ' ' + user.lastname,
                                 'data': user.id

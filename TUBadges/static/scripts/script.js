@@ -25,7 +25,9 @@ $(function(){
 });
 
 $(window).load(function(){
-    $('.badges').isotope('reLayout');
+    $('.badges').isotope({
+        masonry: { columnWidth: getColumnWidth(1) }
+    });
 });
 
 $(window).smartresize(function(){
@@ -243,6 +245,7 @@ function setupBadgeForm(container){
         }).autocomplete({
             serviceUrl: $(this).data('serviceurl'),
             paramName: 'q',
+            params: {'pid': $('#preset-id').val()},
             onSelect: function(d){
                 lastValue = d.value;
                 $('#awardee_id').val(d.data);
@@ -260,6 +263,8 @@ function setupBadgeForm(container){
 
     container.find('input[type="button"].submit').click(function(e){
         e.preventDefault();
+
+        var _this = this;
 
         var data = {
             'keywords': $('#keywords').val(),
@@ -295,7 +300,19 @@ function setupBadgeForm(container){
                 'data': data,
                 'success' : function(data){
                     if(!data.error){
-                        hideModal();
+                        if($(_this).hasClass('small')){
+                            $('#awardee').val('').change();
+                            $('#awardee_id').val('').change();
+                            $('#lva').val('').change();
+                            $('#lva_id').val('').change()
+                            $('#students').val('').change();
+                            $('#proof').val('').change();
+                            $('#comment').val('').change();
+                            $('#rating').val('0').change();
+                            $('#awarder').val($('#awarder').data('oldvalue')).change();
+                        } else {
+                            hideModal();
+                        }
                     } else {
                         modalAlert(data.msg);
                     }
@@ -343,7 +360,7 @@ function setupBadgePresetForm(container){
     setupForm(container);
 
     var badgePreview = $('.badgecreator .preview img', container);
-    var parts = badgePreview.attr('src').split('?')[1].split('&');
+    var parts = (badgePreview.attr('src') != '')?badgePreview.attr('src').split('?')[1].split('&'):[];
     var po = {};
     for(var i=0; i<parts.length; i++){
         parts[i] = parts[i].split('=');
@@ -352,13 +369,25 @@ function setupBadgePresetForm(container){
 
     var currentShape, currentPattern, currentColor;
     if(po.s) currentShape = container.find('.shapes > li > a[data-name="'+po.s+'"]').addClass('selected').data('name');
-    else currentShape = container.find('.shapes > li > a').first().addClass('selected').data('name');
+    else currentShape = container.find('.shapes > li > a')
+        .eq(
+            Math.round(
+                Math.random()*(container.find('.shapes > li > a').length-1)
+            )
+        )
+        .addClass('selected').data('name');
 
     if(po.p) currentPattern = container.find('.patterns > li > a[data-name="'+po.p+'"]').addClass('selected').data('name');
-    else currentPattern = container.find('.patterns > li > a').first().addClass('selected').data('name');
+    else currentPattern = container.find('.patterns > li > a')
+        .eq(
+            Math.round(
+                Math.random()*(container.find('.patterns > li > a').length-1)
+            )
+        )
+        .addClass('selected').data('name');
 
     if(po.c) currentColor = po.c;
-    else currentColor = 'ffcc00';
+    else currentColor = ('000000' + Math.floor(Math.random()*16777215).toString(16)).slice(-6);
 
     badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
 
@@ -380,6 +409,7 @@ function setupBadgePresetForm(container){
 
     container.find('input[type="button"].submit').click(function(e){
         e.preventDefault();
+        var _this = this;
         var pid = ($('#preset-id').val() != '')?$('#preset-id').val():null;
         $.ajax({
             'url': '/ajax/savepreset',
@@ -392,7 +422,33 @@ function setupBadgePresetForm(container){
             },
             'success' : function(data){
                 if(!data.error){
-                    hideModal();
+                    if($(_this).hasClass('small')){
+                        $('#name').val('');
+                        $('#keywords').val('').change();
+                        $('#preset-id').val('');
+
+                        currentShape = container.find('.shapes > li > a')
+                            .eq(
+                                Math.round(
+                                    Math.random()*(container.find('.shapes > li > a').length-1)
+                                )
+                            )
+                            .addClass('selected').data('name');
+                        currentPattern = container.find('.patterns > li > a')
+                            .eq(
+                                Math.round(
+                                    Math.random()*(container.find('.patterns > li > a').length-1)
+                                )
+                            )
+                            .addClass('selected').data('name');
+                        currentColor = ('000000' + Math.floor(Math.random()*16777215).toString(16)).slice(-6);
+                        $("#shape-color").spectrum('set', currentColor);
+
+                        badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
+                    } else {
+                        hideModal();
+                    }
+
                     $.ajax({
                         'url': '/ajax/minpreset?id='+data.id,
                         'type': 'GET',

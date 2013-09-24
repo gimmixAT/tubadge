@@ -1,5 +1,8 @@
             <div class="badge box{% if b.public %} public{% endif %} {{ b.rating_name|lower }}" data-id="{{ b.id }}">
-                <div class="image"><div class="crop"><object data="{{ b.img }}"><img src="{{ b.img }}" alt="badge image"/></object></div></div>
+                <div class="image">
+                    <div class="pad"></div>
+                    <div class="crop"><object data="{{ b.img }}"><img src="{{ b.img }}" alt="badge image"/></object></div>
+                </div>
                 <div class="value">
                     <div class="indicator"><div class="fill" style="height:{{ b.rarity_percent }}%"></div></div>
                     <div class="overlay box">

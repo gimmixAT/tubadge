@@ -219,6 +219,7 @@ a {
             border-radius: 50%;
             background-color: #cccccc;
             overflow: hidden;
+            position: relative;
         }
 
             .badge.hor .image {
@@ -264,6 +265,12 @@ a {
             border-radius: 50%;
             margin: 5%;
             overflow:hidden;
+            position: absolute;
+            top: 0;
+        }
+
+        .badge .image .pad {
+            padding-top: 100%;
         }
 
         .badge h2 {
@@ -900,7 +907,7 @@ a {
             font-style: normal;
             font-weight: 700;
             position: absolute;
-            margin: -11px 0 0 -27px;
+            margin: -11px 0 0 -26px;
             color: #999999;
         }
 
