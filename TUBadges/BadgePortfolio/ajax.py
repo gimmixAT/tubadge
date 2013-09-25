@@ -620,3 +620,28 @@ def get_courses(request):
         result = {'error': True, 'msg': 'Es fehlt ein Parameter.', 'suggestions': []}
 
     return HttpResponse(json.dumps(result), content_type="application/json")
+
+
+def get_tags(request):
+    """
+    Tries to find matching tags and returns the resulting list as JSON
+    :type request: HttpRequest
+    """
+    result = {}
+    if 'q' in request.GET:
+        q = request.GET['q']
+        tags = []
+
+        for t in Tag.objects.filter(name__icontains=q):
+            tags.append({
+                'value': t.name,
+                'data': {
+                    'id': t.id
+                }
+            })
+
+        result = {'error': False, 'suggestions': tags}
+    else:
+        result = {'error': True, 'msg': 'Es fehlt ein Parameter.', 'suggestions': []}
+
+    return HttpResponse(json.dumps(result), content_type="application/json")

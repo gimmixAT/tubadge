@@ -219,6 +219,13 @@ function setupForm(container){
     watchBadgeTypeChange(container);
 }
 
+function showMessage(msg, container, error){
+    if(error) container.addClass('error');
+    else container.removeClass('error');
+
+    container.hide().html('<span>'+msg+'</span>').fadeIn().delay(1500).fadeOut();
+}
+
 /**
  * Badge Issue related funtions
  */
@@ -250,6 +257,14 @@ function setupBadgeForm(container){
                 lastValue = d.value;
                 $('#awardee_id').val(d.data);
             }
+        });
+    });
+
+    container.find('#keywords').each(function(){
+        $(this).autocomplete({
+            serviceUrl: '/ajax/tag',
+            delimiter: /(,|;)\s*/,
+            paramName: 'q'
         });
     });
 
@@ -310,11 +325,13 @@ function setupBadgeForm(container){
                             $('#comment').val('').change();
                             $('#rating').val('0').change();
                             $('#awarder').val($('#awarder').data('oldvalue')).change();
+                            showMessage('Badge wurde vergeben',$('.message', container), false)
                         } else {
                             hideModal();
                         }
                     } else {
-                        modalAlert(data.msg);
+                        //modalAlert(data.msg);
+                        showMessage(data.msg,$('.message', container), true)
                     }
                 }
             });
@@ -391,6 +408,14 @@ function setupBadgePresetForm(container){
 
     badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
 
+    container.find('#keywords').each(function(){
+        $(this).autocomplete({
+            serviceUrl: '/ajax/tag',
+            delimiter: /(,|;)\s*/,
+            paramName: 'q'
+        });
+    });
+
     $('a[href="#change-pattern"]', container).click(function(){
         currentPattern = $(this).data('name');
         $(this).parent().parent().find('a.selected').removeClass('selected');
@@ -411,61 +436,71 @@ function setupBadgePresetForm(container){
         e.preventDefault();
         var _this = this;
         var pid = ($('#preset-id').val() != '')?$('#preset-id').val():null;
-        $.ajax({
-            'url': '/ajax/savepreset',
-            'type': 'POST',
-            'data': {
-                'name': $('#name').val(),
-                'img': badgePreview.attr('src'),
-                'keywords': $('#keywords').val(),
-                'id': pid
-            },
-            'success' : function(data){
-                if(!data.error){
-                    if($(_this).hasClass('small')){
-                        $('#name').val('');
-                        $('#keywords').val('').change();
-                        $('#preset-id').val('');
+        var ok = true;
 
-                        currentShape = container.find('.shapes > li > a')
-                            .eq(
-                                Math.round(
-                                    Math.random()*(container.find('.shapes > li > a').length-1)
+        if($('#name').val() == '') { $('#name').addClass('error'); ok = false; }
+        if($('#keywords').val() == '') { $('#keywords').addClass('error'); ok = false; }
+
+        if(ok){
+            $.ajax({
+                'url': '/ajax/savepreset',
+                'type': 'POST',
+                'data': {
+                    'name': $('#name').val(),
+                    'img': badgePreview.attr('src'),
+                    'keywords': $('#keywords').val(),
+                    'id': pid
+                },
+                'success' : function(data){
+                    if(!data.error){
+                        if($(_this).hasClass('small')){
+                            $('#name').val('');
+                            $('#keywords').val('').change();
+                            $('#preset-id').val('');
+
+                            currentShape = container.find('.shapes > li > a')
+                                .eq(
+                                    Math.round(
+                                        Math.random()*(container.find('.shapes > li > a').length-1)
+                                    )
                                 )
-                            )
-                            .addClass('selected').data('name');
-                        currentPattern = container.find('.patterns > li > a')
-                            .eq(
-                                Math.round(
-                                    Math.random()*(container.find('.patterns > li > a').length-1)
+                                .addClass('selected').data('name');
+                            currentPattern = container.find('.patterns > li > a')
+                                .eq(
+                                    Math.round(
+                                        Math.random()*(container.find('.patterns > li > a').length-1)
+                                    )
                                 )
-                            )
-                            .addClass('selected').data('name');
-                        currentColor = ('000000' + Math.floor(Math.random()*16777215).toString(16)).slice(-6);
-                        $("#shape-color").spectrum('set', currentColor);
+                                .addClass('selected').data('name');
+                            currentColor = ('000000' + Math.floor(Math.random()*16777215).toString(16)).slice(-6);
+                            $("#shape-color").spectrum('set', currentColor);
 
-                        badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
-                    } else {
-                        hideModal();
-                    }
+                            badgePreview.attr('src', '/svg?p='+currentPattern+'&s='+currentShape+'&c='+currentColor);
 
-                    $.ajax({
-                        'url': '/ajax/minpreset?id='+data.id,
-                        'type': 'GET',
-                        'success' : function(data){
-                            if(pid){
-                                $('.badges').isotope('remove', $('.badges .badge[data-id="'+pid+'"]'));
-                            }
-                            var item = $(data);
-                            $('.badges').isotope( 'insert', item);
-                            setupBadgePreset(item);
+                            showMessage('Preset wurde erstellt',$('.message', container), false);
+                        } else {
+                            hideModal();
                         }
-                    });
-                } else {
-                    modalAlert(data.msg);
+
+                        $.ajax({
+                            'url': '/ajax/minpreset?id='+data.id,
+                            'type': 'GET',
+                            'success' : function(data){
+                                if(pid){
+                                    $('.badges').isotope('remove', $('.badges .badge[data-id="'+pid+'"]'));
+                                }
+                                var item = $(data);
+                                $('.badges').isotope( 'insert', item);
+                                setupBadgePreset(item);
+                            }
+                        });
+                    } else {
+                        //modalAlert(data.msg);
+                        showMessage(data.msg,$('.message', container), true);
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 
     $("#shape-color").spectrum({

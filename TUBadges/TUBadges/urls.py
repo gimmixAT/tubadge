@@ -38,6 +38,7 @@ urlpatterns = patterns('',
     url(r'^ajax/togglepublic$', 'BadgePortfolio.ajax.toggle_public'),
     url(r'^ajax/users$', 'BadgePortfolio.ajax.get_users'),
     url(r'^ajax/students', 'BadgePortfolio.ajax.get_users', {'students': True}),
-    url(r'^ajax/courses$', 'BadgePortfolio.ajax.get_courses')
+    url(r'^ajax/courses$', 'BadgePortfolio.ajax.get_courses'),
+    url(r'^ajax/tag', 'BadgePortfolio.ajax.get_tags')
 
 )

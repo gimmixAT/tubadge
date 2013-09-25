@@ -276,7 +276,7 @@ a {
         .badge h2 {
             font-size:16px;
             font-weight:600;
-            margin: 8px 0 7px 0;
+            margin: 8px 0 0 0;
         }
 
         .badge .info{
@@ -584,6 +584,10 @@ a {
     background-color:rgba(240,240,240,0.65);
     overflow: hidden;
 }
+
+    .modal div.wrap {
+        margin: 10px 0 0 0;
+    }
 
     .modal .contentbox {
         background-color:#ffffff;
@@ -917,6 +921,31 @@ a {
             line-height: 27px;
             margin: 0;
         }
+
+    .modal div.message, .modal div.error {
+        line-height:20px;
+        font-size:15px;
+    }
+
+        .modal div.message {
+            position: absolute;
+            bottom:25px;
+            left:25px;
+            width:330px;
+            height: 70px;
+            display: table;
+        }
+
+        .modal div.message > span {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .modal .error {
+            color: #cc1111;
+        }
+
+
 
 
 /* autocomplete styles */

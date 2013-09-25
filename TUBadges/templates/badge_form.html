@@ -1,6 +1,6 @@
 {% load staticfiles %}
             <h1>Badge vergeben</h1>
-            <div>
+            <div class="wrap">
                 {% csrf_token %}
                 <label for="awardee">Der Student </label><span class="input"><input name="awardee" id="awardee" value="" placeholder="Matrikelnummer" class="autocomplete" data-serviceurl="/ajax/students"/></span>
                 <input type="hidden" name="awardee_id" id="awardee_id" />
@@ -25,4 +25,5 @@
                     <input type="button" class="small clear submit" value="&raquo; Badge und weiteren vergeben" />
                 </div>
 
+                <div class="message"></div>
             </div>
