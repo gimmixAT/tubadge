@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import (check_password, make_password, is_password_usable)
 from django.core.exceptions import ValidationError
 import re
-
+from datetime import date
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -106,6 +106,12 @@ class Badge(models.Model):
         (SILVER, 'Silber'),
         (GOLD, 'Gold')
     )
+    SUMMER_SEMESTER = 's'
+    WINTER_SEMESTER = 'w'
+    SEMESTER_VALUE = {
+        (SUMMER_SEMESTER, 'Sommersemester'),
+        (WINTER_SEMESTER, 'Wintersemester')
+    }
     awardee = models.ForeignKey(BadgeUser, related_name='my_badges')
     issuer = models.ForeignKey(BadgeUser, related_name='issued_badges')
     awarder = models.CharField(max_length=200)
@@ -120,9 +126,16 @@ class Badge(models.Model):
     context = models.CharField(max_length=100, blank=True, null=True)
     public = models.BooleanField(default=False)
     candidates = models.IntegerField()
+    date = models.DateField(default=date.today)
+    semester = models.CharField(choices=SEMESTER_VALUE, max_length=1)
+    year = models.PositiveIntegerField()
 
     class Meta:
         unique_together = ('awardee', 'preset')
+
+    @property
+    def candidate_count(self):
+        return BadgePresetSemesterCounts.objects.get(year=self.year, semester=self.semester, preset_id=self.preset_id).candidates
 
     @property
     def rating_name(self):
@@ -145,7 +158,7 @@ class Badge(models.Model):
 
     @property
     def rarity(self):
-        return 1 - pow(float(self.issued) / float(self.candidates), Badge.factor(self.rating))
+        return 1 - pow(float(self.issued) / float(self.candidate_count), Badge.factor(self.rating))
 
     @property
     def rarity_percent(self):
@@ -171,3 +184,13 @@ class Badge(models.Model):
     @staticmethod
     def factor(rating):
         return [2, 1, 0.5][rating]
+
+
+class BadgePresetSemesterCounts(models.Model):
+    preset = models.ForeignKey(BadgePreset, related_name='semester_candidates')
+    semester = models.CharField(choices=Badge.SEMESTER_VALUE, max_length=1)
+    year = models.PositiveIntegerField()
+    candidates = models.PositiveIntegerField()
+
+    class Meta:
+        unique_together = ('preset', 'semester', 'year')

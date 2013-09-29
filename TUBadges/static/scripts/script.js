@@ -99,16 +99,6 @@ function resizeFormElements(target){
 
 }
 
-function watchBadgeTypeChange(target){
-    target.find('select').change(function(e){
-        switch($(e.target).val()){
-            case '0': target.find('.badge').removeClass('bronze silver gold').addClass('bronze'); break;
-            case '2': target.find('.badge').removeClass('bronze silver gold').addClass('gold'); break;
-            default: target.find('.badge').removeClass('bronze silver gold').addClass('silver'); break;
-        }
-    });
-}
-
 function setupSlider(target){
     var itemsPerPage = target.data('items_per_page');
     var next = $('#'+target.data('next'));
@@ -216,7 +206,6 @@ function modalAlert(msg){
 
 function setupForm(container){
     resizeFormElements(container);
-    watchBadgeTypeChange(container);
 }
 
 function showMessage(msg, container, error){
@@ -231,6 +220,32 @@ function showMessage(msg, container, error){
  */
 function setupBadgeForm(container){
     setupForm(container);
+
+    container.find('#rating').change(function(e){
+        switch($(e.target).val()){
+            case '0': container.find('.badge').removeClass('bronze silver gold').addClass('bronze'); break;
+            case '2': container.find('.badge').removeClass('bronze silver gold').addClass('gold'); break;
+            default: container.find('.badge').removeClass('bronze silver gold').addClass('silver'); break;
+        }
+    });
+
+    var handleSemesterChange = function(e){
+        $.ajax({
+            'url': '/ajax/candidates',
+            'type': 'GET',
+            'data': {
+                'y': $('#year').val(),
+                's': $('#semester').val(),
+                'id': $('#preset-id').val()
+            },
+            'success' : function(data){
+                if(!data.error) $('#students').val(data.count);
+            }
+        });
+    }
+
+    container.find('#semester').change(handleSemesterChange);
+    container.find('#year').change(handleSemesterChange);
 
     container.find('#lva').each(function(){
         $(this).autocomplete({
@@ -285,7 +300,9 @@ function setupBadgeForm(container){
             'keywords': $('#keywords').val(),
             'comment': $('#comment').val(),
             'pid': $('#preset-id').val(),
-            'rating': $('#rating').val()
+            'rating': $('#rating').val(),
+            'year': $('#year').val(),
+            'semester': $('#semester').val()
         }
 
         container.find('.error').removeClass('error');

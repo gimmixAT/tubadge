@@ -4,7 +4,9 @@
                 {% csrf_token %}
                 <label for="awardee">Der Student </label><span class="input"><input name="awardee" id="awardee" value="" placeholder="Matrikelnummer" class="autocomplete" data-serviceurl="/ajax/students"/></span>
                 <input type="hidden" name="awardee_id" id="awardee_id" />
-                <label for="lva">hat in</label><span class="input"><input name="lva" id="lva" value="" placeholder="123.456 Lehrveranstaltung" class="autocomplete" data-serviceurl="/ajax/courses"/></span>
+                <label for="semester">hat im</label><span class="select autosize"><select name="semester" id="semester" class="autosize"><option value="w"{{ winter_selected }}>Wintersemester</option><option value="s"{{ summer_selected }}>Sommersemester</option></select></span><span class="input autosize"><input name="year" id="year" value="{{ year }}" placeholder="2012" class="autosize"/></span>
+                <div class="clear"></div>
+                <label for="lva">in</label><span class="input"><input name="lva" id="lva" value="" placeholder="123.456 Lehrveranstaltung" class="autocomplete" data-serviceurl="/ajax/courses"/></span>
                 <input type="hidden" name="lva_id" id="lva_id" />
                 <label for="students">als einer von</label><span class="input autosize"><input name="students" id="students" value="" placeholder="123" class="autosize"/></span> Studenten
                 <label for="proof">die folgende Leistung erbracht:</label><br/>

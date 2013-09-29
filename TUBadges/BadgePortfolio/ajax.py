@@ -11,6 +11,7 @@ import logging
 import os
 from os.path import isfile, join, isdir
 import re
+from datetime import date
 
 
 def issue_badge_form(request):
@@ -19,7 +20,9 @@ def issue_badge_form(request):
     :type request: HttpRequest
     """
     if is_logged_in(request):
-        content = {}
+        content = {
+            'year': date.today().year
+        }
         bu = get_loggedin_user(request)
         if bu.role == BadgeUser.PROFESSOR:
             if 'pid' in request.GET and request.GET['pid'] != '' and BadgePreset.objects.filter(id=request.GET['pid']).exists():
@@ -28,6 +31,14 @@ def issue_badge_form(request):
                     'p': bp,
                     'issuer': bu.firstname+' '+bu.lastname,
                     'issuer_id': bu.id
+                })
+            if 2 < date.today().month < 10:
+                content.update({
+                    'summer_selected': ' selected="selected"'
+                })
+            else:
+                content.update({
+                    'winter_selected': ' selected="selected"'
                 })
             return render_to_response('badge_form.html', content)
         else:
@@ -163,7 +174,7 @@ def badge_preset_detail(request):
                 if bp.owner_id == bu.id:
                     content.update({
                         'bp': bp,
-                        'issued': bp.issued_badges.all().count()
+                        'issued': bp.issued_badges.count()
                     })
                     return render_to_response('badge_preset_detail.html', content)
                 else:
@@ -256,13 +267,34 @@ def issue_badge(request):
                     b.rating = int(request.POST['rating'])
                     b.issuer = bu
 
+                    if 'semester' in request.POST and (request.POST['semester'] == Badge.WINTER_SEMESTER or request.POST['semester'] == Badge.SUMMER_SEMESTER) and 'year' in request.POST:
+                        b.semester = request.POST['semester']
+                        b.year = request.POST['year']
+                    else:
+                        b.year = date.today().year
+                        if 2 < date.today().month < 10:
+                            b.semester = Badge.SUMMER_SEMESTER
+                        else:
+                            b.semester = Badge.WINTER_SEMESTER
+
                     if 'comment' in request.POST:
                         b.comment = request.POST['comment']
 
-                    if 'students' in request.POST:
-                        b.candidates = request.POST['students']
+                    bpcc = BadgePresetSemesterCounts.objects.get(semester=b.semester, year=b.year, preset_id=b.preset_id)
+
+                    if bpcc:
+                        if 'students' in request.POST and int(request.POST['students']) != bpcc.candidates and int(request.POST['students']) > b.preset.issued_badges.count():
+                            bpcc.candidates = request.POST['students']
                     else:
-                        b.candidates = 1
+                        bpcc = BadgePresetSemesterCounts()
+                        bpcc.year = b.year
+                        bpcc.semester = b.semester
+                        if 'students' in request.POST and request.POST['students'] > b.preset.issued_badges.count():
+                            bpcc.candidates = int(request.POST['students'])
+                        else:
+                            bpcc.candidates = b.preset.issued_badges.count() + 1
+
+                    b.candidates = bpcc.candidates
 
                     b.proof = request.POST['proof']
 
@@ -643,5 +675,23 @@ def get_tags(request):
         result = {'error': False, 'suggestions': tags}
     else:
         result = {'error': True, 'msg': 'Es fehlt ein Parameter.', 'suggestions': []}
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
+
+
+def get_candidate_count(request):
+    """
+    Tries to retrieve the count for the given BadgePreset, semester and year returns the resulting list as JSON
+    :type request: HttpRequest
+    """
+    result = {}
+    if 'y' in request.GET and 's' in request.GET and 'id' in request.GET:
+        c = 1
+        if BadgePresetSemesterCounts.objects.filter(year=request.GET['y'], semester=request.GET['s'], preset_id=request.GET['id']).exists():
+            c = BadgePresetSemesterCounts.objects.get(year=request.GET['y'], semester=request.GET['s'], preset_id=request.GET['id']).candidates
+
+        result = {'error': False, 'count': c}
+    else:
+        result = {'error': True, 'msg': 'Es fehlt ein Parameter.', 'count': 0}
 
     return HttpResponse(json.dumps(result), content_type="application/json")
