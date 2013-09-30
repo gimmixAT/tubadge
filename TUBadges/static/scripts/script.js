@@ -253,7 +253,7 @@ function setupBadgeForm(container){
             paramName: 'q',
             onSelect: function(d){
                 $('#lva_id').val(d.data.id);
-                $('#students').val(d.data.students);
+                //$('#students').val(d.data.students);
             }
         });
     });

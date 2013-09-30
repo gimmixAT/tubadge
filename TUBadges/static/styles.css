@@ -1012,6 +1012,10 @@ a {
         margin-top:50px;
     }
 
+    .modal .contentbox {
+        margin-top:150px;
+    }
+
 }
 
 @media (max-width: 730px){

@@ -32,6 +32,15 @@ def issue_badge_form(request):
                     'issuer': bu.firstname+' '+bu.lastname,
                     'issuer_id': bu.id
                 })
+                if 2 < date.today().month < 10:
+                    content.update({
+                        'candidates': BadgePresetSemesterCounts.count(date.today().year, Badge.SUMMER_SEMESTER, request.GET['pid'])
+                    })
+                else:
+                    content.update({
+                        'candidates': BadgePresetSemesterCounts.count(date.today().year, Badge.WINTER_SEMESTER, request.GET['pid'])
+                    })
+
             if 2 < date.today().month < 10:
                 content.update({
                     'summer_selected': ' selected="selected"'
@@ -280,19 +289,21 @@ def issue_badge(request):
                     if 'comment' in request.POST:
                         b.comment = request.POST['comment']
 
-                    bpcc = BadgePresetSemesterCounts.objects.get(semester=b.semester, year=b.year, preset_id=b.preset_id)
-
-                    if bpcc:
+                    if BadgePresetSemesterCounts.objects.filter(semester=b.semester, year=b.year, preset_id=b.preset_id).exists():
+                        bpcc = BadgePresetSemesterCounts.objects.get(semester=b.semester, year=b.year, preset_id=b.preset_id);
                         if 'students' in request.POST and int(request.POST['students']) != bpcc.candidates and int(request.POST['students']) > b.preset.issued_badges.count():
                             bpcc.candidates = request.POST['students']
+                            bpcc.save()
                     else:
                         bpcc = BadgePresetSemesterCounts()
                         bpcc.year = b.year
                         bpcc.semester = b.semester
+                        bpcc.preset = bp
                         if 'students' in request.POST and request.POST['students'] > b.preset.issued_badges.count():
                             bpcc.candidates = int(request.POST['students'])
                         else:
                             bpcc.candidates = b.preset.issued_badges.count() + 1
+                        bpcc.save()
 
                     b.candidates = bpcc.candidates
 
@@ -303,9 +314,9 @@ def issue_badge(request):
                             lvap = re.match('^([0-9]{3})\.([0-9]{3}) ?(.+)$', request.POST['lva'])
                             if lvap:
                                 lva = LVA()
-                                lva.title = lvap.group(4)
-                                lva.institute = lvap.group(2)
-                                lva.number = lvap.group(3)
+                                lva.title = lvap.group(3)
+                                lva.institute = lvap.group(1)
+                                lva.number = lvap.group(2)
                                 if 'students' in request.POST:
                                     lva.students = request.POST['students']
                                 else:
@@ -686,11 +697,7 @@ def get_candidate_count(request):
     """
     result = {}
     if 'y' in request.GET and 's' in request.GET and 'id' in request.GET:
-        c = 1
-        if BadgePresetSemesterCounts.objects.filter(year=request.GET['y'], semester=request.GET['s'], preset_id=request.GET['id']).exists():
-            c = BadgePresetSemesterCounts.objects.get(year=request.GET['y'], semester=request.GET['s'], preset_id=request.GET['id']).candidates
-
-        result = {'error': False, 'count': c}
+        result = {'error': False, 'count': BadgePresetSemesterCounts.count(request.GET['y'], request.GET['s'], request.GET['id'])}
     else:
         result = {'error': True, 'msg': 'Es fehlt ein Parameter.', 'count': 0}
 

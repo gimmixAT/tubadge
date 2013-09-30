@@ -8,7 +8,7 @@
                     <div class="overlay box">
                         <span class="label">Typ:</span> {{ b.rating_name }}<br/>
                         <span class="label">Vertrauen:</span> {{ b.value_percent }}%<br/>
-                        <span class="label">Häufigkeit:</span> {{ b.issued }} / {{ b.candidates }}
+                        <span class="label">Häufigkeit:</span> {{ b.issued }} / {{ b.candidate_count }}
                     </div>
                 </div>
                 {% if not public %}<a class="public-indicator" href="#toggle-public" title="{% if b.public %}Veröffentlichung rückgängig machen{% else %}Veröffentlichen{% endif %}"></a>{% endif %}

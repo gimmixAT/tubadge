@@ -194,3 +194,10 @@ class BadgePresetSemesterCounts(models.Model):
 
     class Meta:
         unique_together = ('preset', 'semester', 'year')
+
+    @staticmethod
+    def count(year, semester, preset_id):
+        c = 1
+        if BadgePresetSemesterCounts.objects.filter(year=year, semester=semester, preset_id=preset_id).exists():
+            c = BadgePresetSemesterCounts.objects.get(year=year, semester=semester, preset_id=preset_id).candidates
+        return c
