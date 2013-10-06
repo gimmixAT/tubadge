@@ -214,8 +214,8 @@ def issue_badge(request):
                 # if no user id is given check if the name is a studentID and
                 # create a new user if the studentID isn't already in use
                 if re.match('^[0-9]{7}$', request.POST['awardee'], re.IGNORECASE):
-                    if BadgeUser.objects.filter(studentID=request.POST['awardee']).exists():
-                        awardee = BadgeUser.objects.get(studentID=request.POST['awardee'])
+                    if BadgeUser.objects.filter(student_id=request.POST['awardee']).exists():
+                        awardee = BadgeUser.objects.get(student_id=request.POST['awardee'])
 
                     if not awardee:
                         awardee = BadgeUser()
