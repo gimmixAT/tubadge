@@ -68,7 +68,7 @@ class BadgeUser(models.Model):
             return BadgeUser.objects.filter(Q(email__icontains=query) | Q(student_id__startswith=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query))
 
     def __unicode__(self):
-        return self.firstname+" "+self.lastname+" ("+self.email+")"
+        return self.student_id + " - " + self.firstname+" "+self.lastname+" ("+self.email+")"
 
     def credibility(self, rating):
         bc = self.issued_badges.filter(rating=rating).count()
@@ -92,6 +92,7 @@ class LVA(models.Model):
 
 class BadgePreset(models.Model):
     owner = models.ForeignKey(BadgeUser, related_name='badge_presets')
+    original = models.ForeignKey('self', related_name='forks', blank=True, null=True)
     name = models.CharField(max_length=200)
     img = models.CharField(max_length=200)
     keywords = models.ManyToManyField(Tag)

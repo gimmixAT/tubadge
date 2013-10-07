@@ -13,4 +13,13 @@
                     {{ bp.keywords.all|join:", " }}
                 </div>
                 {% endif %}
+                {% if bp.issued_badges.all|length > 0 %}
+                <div class="line"></div>
+                <div class="info">
+                    <h3>Vergeben an</h3>
+                    {% for ib in bp.issued_badges.all %}
+                    {{ ib.awardee }}<br/>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>

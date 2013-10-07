@@ -22,6 +22,7 @@ $(function(){
         requestModal('/ajax/presetform', setupBadgePresetForm);
         return false;
     });
+
 });
 
 $(window).load(function(){
@@ -392,6 +393,10 @@ function setupBadge(item){
 function setupBadgePresetForm(container){
 
     setupForm(container);
+
+    container.find('img').hide().load(function(){
+        $(this).fadeIn();
+    });
 
     var badgePreview = $('.badgecreator .preview img', container);
     var parts = (badgePreview.attr('src') != '')?badgePreview.attr('src').split('?')[1].split('&'):[];

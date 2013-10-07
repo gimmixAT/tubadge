@@ -432,7 +432,7 @@ a {
                 top:8px;
                 overflow:hidden;
                 border:2px solid #cccccc;
-                border-radius:7px;
+                border-radius:8px;
             }
 
                 .badge .value > .indicator > .fill {
@@ -763,6 +763,7 @@ a {
 
         .badgecreator .shapes > li > a{
             width:100%;
+            min-height: 100%;
             height: auto;
             display: block;
             position: absolute;
@@ -774,6 +775,7 @@ a {
             .badgecreator .shapes > li > a:hover{
                 opacity: 1;
                 width:200%;
+                min-height:200%;
                 top: -50%;
                 left: -50%;
                 z-index: 2;
@@ -799,14 +801,14 @@ a {
         position: relative;
     }
 
-        .badgecreator .patterns > li > img, .badgecreator .shapes > li > img {
-            width:100%;
-            height:auto;
+        .badgecreator .patterns > li > .pad, .badgecreator .shapes > li > .pad {
+            padding-top: 100%;
         }
 
         .badgecreator .patterns > li > a {
             display: block;
             width: 100%;
+            min-height: 100%;
             height: auto;
             border-radius: 50%;
             border:2px solid #cccccc;
@@ -819,6 +821,7 @@ a {
 
             .badgecreator .patterns > li > a:hover {
                 width:200%;
+                min-height:200%;
                 top: -50%;
                 left: -50%;
                 z-index: 2;

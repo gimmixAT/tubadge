@@ -464,6 +464,7 @@ def duplicate_badge_preset(request):
                     bpn.img = bp.img
                     bpn.owner = bp.owner
                     bpn.save()
+                    bpn.original = bp
                     bpn.keywords = bp.keywords.all()
                     bpn.save()
 
