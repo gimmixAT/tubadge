@@ -437,6 +437,12 @@ License: MIT
     position:relative;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==);
 }
+
+.sp-preview-inner, .sp-palette-container .sp-thumb-inner
+{
+    border-radius:50%;
+}
+
 .sp-preview-inner, .sp-alpha-inner, .sp-thumb-inner
 {
     display:block;

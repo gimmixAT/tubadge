@@ -240,6 +240,7 @@ a {
         .badge .image img, .badge .image object, .badge .image embed {
             width: 100%;
             display: block;
+            border-radius:50%;
         }
 
         .badge .active-area {
@@ -709,6 +710,7 @@ a {
             height: auto;
             position: relative;
             z-index: 2;
+            border-radius:50%;
         }
 
         .badgecreator .preview .bg {
@@ -717,6 +719,7 @@ a {
             position: absolute;
             top: 0;
             background: #cccccc;
+            border-radius:50%;
         }
 
         .badgecreator .preview .fg {
@@ -724,6 +727,7 @@ a {
             height: 100%;
             position: absolute;
             top: 0;
+            border-raius:50%;
         }
 
     .badgecreator h2 {
@@ -835,6 +839,7 @@ a {
             .badgecreator .patterns > li > a > img {
                 width:100%;
                 height:auto;
+                border-radius: 50%;
             }
 
 .modal .badge.big {
