@@ -125,6 +125,8 @@ def badge_preset_form(request):
                             'name': bp.name,
                             'img': bp.img,
                             'keywords': bp.keywords,
+                            'proof': bp.proof,
+                            'comment': bp.comment,
                             'save_label': 'Preset speichern',
                             'save_more_label': 'Preset speichern und weiteres erstellen',
                             'form_action_label': 'editieren'
@@ -410,6 +412,10 @@ def save_badge_preset(request):
                         bp.name = request.POST['name']
                     if 'img' in request.POST:
                         bp.img = request.POST['img']
+                    if 'proof' in request.POST:
+                        bp.proof = request.POST['proof']
+                    if 'comment' in request.POST:
+                        bp.comment = request.POST['comment']
 
                     bp.save()
 

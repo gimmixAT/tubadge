@@ -5,6 +5,8 @@ from django.contrib.auth.hashers import (check_password, make_password, is_passw
 from django.core.exceptions import ValidationError
 import re
 from datetime import date
+from django.db.models.fields import TextField
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -99,6 +101,8 @@ class BadgePreset(models.Model):
     name = models.CharField(max_length=200)
     img = models.CharField(max_length=200)
     keywords = models.ManyToManyField(Tag)
+    proof = models.TextField(default='', blank=True)
+    comment = models.TextField(default='', blank=True)
 
 
 class Badge(models.Model):

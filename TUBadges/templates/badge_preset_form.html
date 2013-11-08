@@ -38,6 +38,11 @@
                 <label for="name">Name </label> <span class="input"><input name="name" id="name" value="{{ name }}" placeholder="Badgebezeichnung"/></span>
                 <label for="keywords">Schlagw&ouml;rter</label>
                 <span class="textarea inline"><textarea name="keywords" id="keywords" placeholder="zB UX Design, Java, Numerik, ..." rows="1" class="autosize">{{ keywords.all|join:", " }}</textarea></span>
+                <label for="proof">Leistung</label>
+                <span class="textarea inline"><textarea name="proof" id="proof" placeholder="URL oder kurze Beschreibung" rows="1" class="autosize">{{ proof }}</textarea></span>
+                <label for="comment">Kommentar</label>
+                <span class="textarea inline"><textarea name="comment" id="comment" placeholder="" rows="1" class="autosize">{{ comment }}</textarea></span>
+
                 <input type="hidden" id="preset-id" name="preset-id" value="{{ id }}" />
                 <div class="buttongroup">
                     <input type="button" class="submit" value="&raquo; {{ save_label }}" />

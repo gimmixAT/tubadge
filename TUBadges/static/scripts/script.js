@@ -336,14 +336,14 @@ function setupBadgeForm(container){
                         if($(_this).hasClass('small')){
                             $('#awardee').val('').change();
                             $('#awardee_id').val('').change();
-                            $('#lva').val('').change();
-                            $('#lva_id').val('').change()
-                            $('#students').val('').change();
-                            $('#proof').val('').change();
-                            $('#comment').val('').change();
+                            //$('#lva').val('').change();
+                            //$('#lva_id').val('').change()
+                            //$('#students').val('').change();
+                            //$('#proof').val('').change();
+                            //$('#comment').val('').change();
                             $('#rating').val('0').change();
-                            $('#awarder').val($('#awarder').data('oldvalue')).change();
-                            showMessage('Badge wurde vergeben',$('.message', container), false)
+                            //$('#awarder').val($('#awarder').data('oldvalue')).change();
+                            showMessage('Badge wurde vergeben',$('.message', container), false);
                         } else {
                             hideModal();
                         }
@@ -471,6 +471,8 @@ function setupBadgePresetForm(container){
                     'name': $('#name').val(),
                     'img': badgePreview.attr('src'),
                     'keywords': $('#keywords').val(),
+                    'comment': $('#comment').val(),
+                    'proof': $('#proof').val(),
                     'id': pid
                 },
                 'success' : function(data){
@@ -478,6 +480,8 @@ function setupBadgePresetForm(container){
                         if($(_this).hasClass('small')){
                             $('#name').val('');
                             $('#keywords').val('').change();
+                            $('#comment').val('').change();
+                            $('#proof').val('').change();
                             $('#preset-id').val('');
 
                             currentShape = container.find('.shapes > li > a')

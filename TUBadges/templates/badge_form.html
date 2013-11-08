@@ -10,7 +10,7 @@
                 <input type="hidden" name="lva_id" id="lva_id" />
                 <label for="students">als einer von</label><span class="input autosize"><input name="students" id="students" value="{{ candidates }}" placeholder="123" class="autosize"/></span> Studenten
                 <label for="proof">die folgende Leistung erbracht:</label><br/>
-                <span class="textarea"><textarea name="proof" id="proof" placeholder="URL oder kurze Beschreibung" rows="1" class="autosize"></textarea></span>
+                <span class="textarea"><textarea name="proof" id="proof" placeholder="URL oder kurze Beschreibung" rows="1" class="autosize">{{ p.proof }}</textarea></span>
                 <label for="rating">und erhält dafür den</label> <span class="select autosize"><select name="rating" id="rating" class="autosize"><option value="0">bronzenen</option><option value="1">silbernen</option><option value="2">goldenen</option></select></span> Badge<br/>
                 <input type="hidden" value="{{ p.id }}" name="preset-id" id="preset-id"/>
 
@@ -19,7 +19,7 @@
                 <label for="awarder">von</label><span class="input autosize"><input name="awarder" id="awarder" value="{{ issuer }}" placeholder="" class="autosize"/></span> <span class="opt issuer" style="display:none;">via <span class="value">{{ issuer }}</span></span><br/>
                 <input type="hidden" name="issuer_id" value="{{ issuer_id }}" />
                 <label for="comment">mit folgendem Kommentar:</label>
-                <span class="textarea"><textarea name="comment" id="comment" placeholder="" rows="1" class="autosize"></textarea></span>
+                <span class="textarea"><textarea name="comment" id="comment" placeholder="" rows="1" class="autosize">{{ p.comment }}</textarea></span>
 
                 <div class="buttongroup">
                     <input type="button" class="submit" value="&raquo; Badge vergeben" />
