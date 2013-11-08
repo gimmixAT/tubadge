@@ -13,6 +13,19 @@
                     {{ bp.keywords.all|join:", " }}
                 </div>
                 {% endif %}
+                {% if bp.proof != '' %}
+                <div class="line"></div>
+                <div class="info">
+                    <h3>Leistung</h3>
+                    {{ bp.proof }}
+                </div>
+                {% endif %}
+                {% if bp.comment != '' %}
+                <div class="line"></div>
+                <div class="quote">
+                    {{ bp.comment }}
+                </div>
+                {% endif %}
                 {% if bp.issued_badges.all|length > 0 %}
                 <div class="line"></div>
                 <div class="info">

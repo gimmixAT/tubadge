@@ -35,8 +35,9 @@
             </div>
             <div class="axisform clear">
 
-                <label for="name">Name </label> <span class="input"><input name="name" id="name" value="{{ name }}" placeholder="Badgebezeichnung"/></span>
-                <label for="keywords">Schlagw&ouml;rter</label>
+                <label for="name">Name *</label>
+                <span class="input"><input name="name" id="name" value="{{ name }}" placeholder="Badgebezeichnung"/></span>
+                <label for="keywords">Schlagw&ouml;rter *</label>
                 <span class="textarea inline"><textarea name="keywords" id="keywords" placeholder="zB UX Design, Java, Numerik, ..." rows="1" class="autosize">{{ keywords.all|join:", " }}</textarea></span>
                 <label for="proof">Leistung</label>
                 <span class="textarea inline"><textarea name="proof" id="proof" placeholder="URL oder kurze Beschreibung" rows="1" class="autosize">{{ proof }}</textarea></span>

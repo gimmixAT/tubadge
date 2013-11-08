@@ -623,7 +623,7 @@ a {
     }
 
     .modal .axisform label {
-        width: 120px;
+        width: 130px;
         text-align: right;
         margin: 0 20px 0 0;
     }
@@ -661,6 +661,7 @@ a {
             overflow: hidden;
             padding: 5px 4px 0 6px;
             clear: none;
+            min-height:46px;
         }
 
             .modal span.textarea.inline > textarea {
