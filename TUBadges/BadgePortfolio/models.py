@@ -62,8 +62,11 @@ class BadgeUser(models.Model):
         :type query: String
         """
         parts = query.split(' ', 2)
+        parts2 = query.split(',', 2)
         if len(parts) is 2:
             return BadgeUser.objects.filter(Q(email__icontains=query) | Q(student_id__startswith=query) | (Q(firstname__icontains=parts[0]) & Q(lastname__icontains=parts[1])))
+        elif len(parts2) is 2:
+            return BadgeUser.objects.filter(Q(student_id__startswith=parts2[0]))
         else:
             return BadgeUser.objects.filter(Q(email__icontains=query) | Q(student_id__startswith=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query))
 

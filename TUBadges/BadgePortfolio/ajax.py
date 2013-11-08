@@ -313,16 +313,20 @@ def issue_badge(request):
                         if 'lva' in request.POST and request.POST['lva'] != '':
                             lvap = re.match('^([0-9]{3})\.([0-9]{3}) ?(.+)$', request.POST['lva'])
                             if lvap:
-                                lva = LVA()
-                                lva.title = lvap.group(3)
-                                lva.institute = lvap.group(1)
-                                lva.number = lvap.group(2)
-                                if 'students' in request.POST:
-                                    lva.students = request.POST['students']
+                                #check if lva exists already
+                                if LVA.objects.filter(insititute=lvap.group(1), number=lvap.group(2)).exists():
+                                    b.lva = LVA.objects.get()
                                 else:
-                                    lva.students = 1
-                                lva.save()
-                                b.lva = lva
+                                    lva = LVA()
+                                    lva.title = lvap.group(3)
+                                    lva.institute = lvap.group(1)
+                                    lva.number = lvap.group(2)
+                                    if 'students' in request.POST:
+                                        lva.students = request.POST['students']
+                                    else:
+                                        lva.students = 1
+                                    lva.save()
+                                    b.lva = lva
                             else:
                                 b.context = request.POST['lva']
                     else:
@@ -628,7 +632,7 @@ def get_courses(request):
     if 'q' in request.GET:
         q = request.GET['q']
         courses = []
-        qm = re.match('^([0-9]{3})\.([0-9]{1,3})$', q);
+        qm = re.match('^([0-9]{3})\.([0-9]{1,3}).*$', q);
         if qm:
             #tries to find a course by institute and course id
             for co in LVA.objects.filter(institute=int(qm.group(1)), number__startswith=int(qm.group(2))):
