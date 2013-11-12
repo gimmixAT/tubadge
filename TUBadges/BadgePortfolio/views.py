@@ -28,7 +28,9 @@ def badges(request, uid=None):
     If no uid is given this view will show all Badges of the logged in user.
     :type request: HttpRequest
     """
-    check_if_login(request)
+    loginresponse = check_if_login(request)
+    if loginresponse: return loginresponse
+
     if 'uid' in request.GET:
         uid = request.GET['uid']
 
