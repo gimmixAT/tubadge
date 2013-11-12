@@ -29,6 +29,7 @@ class BadgeUser(models.Model):
     student_id = models.CharField(max_length=10, default=0)
     object_id = models.IntegerField(blank=True, null=True)
     role = models.CharField(max_length=4, choices=ROLES, default=STUDENT)
+    logout_date = models.DateTimeField(null=True, blank=True)
 
     def check_password(self, raw_password):
         return check_password(raw_password, self.password)

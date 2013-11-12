@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect, HttpRequest
 from django.utils.crypto import salted_hmac
 import time
+from datetime import datetime
 from BadgePortfolio.models import BadgeUser
 
 
@@ -19,7 +20,7 @@ def check_if_login(request):
     elif 'sKey' in request.GET or 'logout' in request.GET:
         if authenticate(request):
             if request.GET['sKey']: handle_login(request)
-            else: return handle_logout(request)
+            else: return handle_logout(request, True)
         else: handle_logout(request)
 
 
@@ -85,11 +86,33 @@ def handle_login(request):
         return False
 
 
-def handle_logout(request):
+def handle_logout(request, force=False):
     """
     :param request:
     :type request: HttpRequest
     """
     if 'sKey' in request.session: del request.session['sKey']
     del request.session['uID']
+    request.session.flush()
+
+    if force and 'oid' in request.GET:
+        bu = BadgeUser.objects.get(object_id=request.GET['oid'])
+        if bu:
+            bu.logout_date = datetime.now()
+            bu.save()
+
     return HttpResponseRedirect('https://iu.zid.tuwien.ac.at/0.graphic.check')
+
+
+def update_session(request):
+    """
+    Checks if the user has already been logged out in the meantime via SSO
+    :param request:
+    :type request: HttpRequest
+    """
+    if 'uID' in request.session and request.session['uID'] != '':
+        bu = BadgeUser.objects.get(id=request.session['uID'])
+        if 'last_action_date' in request.session and bu.logout_date and bu.logout_date > request.session['last_action_date']:
+            handle_logout(request)
+        else:
+            request.session['last_action_date'] = datetime.now()

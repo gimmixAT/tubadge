@@ -16,6 +16,7 @@ def login(request):
     """
     The login view.
     """
+    update_session(request)
     c = {}
     c.update(csrf(request))
     return render_to_response('login.html', c)
@@ -28,6 +29,9 @@ def badges(request, uid=None):
     If no uid is given this view will show all Badges of the logged in user.
     :type request: HttpRequest
     """
+
+    update_session(request)
+
     loginresponse = check_if_login(request)
     if loginresponse: return loginresponse
 
@@ -70,6 +74,9 @@ def presets(request):
     :param request:
     :return:
     """
+
+    update_session(request)
+
     if is_logged_in(request):
         bu = get_loggedin_user(request)
         if bu.role == BadgeUser.PROFESSOR:
