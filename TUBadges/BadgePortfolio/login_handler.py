@@ -19,9 +19,12 @@ def check_if_login(request):
 
     elif 'sKey' in request.GET or 'logout' in request.GET:
         if authenticate(request):
-            if request.GET['sKey']: handle_login(request)
-            else: return handle_logout(request, True)
-        else: handle_logout(request)
+            if request.GET['sKey']:
+                handle_login(request)
+            else:
+                return handle_logout(request, True)
+        else:
+            handle_logout(request)
 
 
 def get_loggedin_user(request):
@@ -47,8 +50,10 @@ def authenticate(request):
     :type request: HttpRequest
     """
     secret = "asdjasldkjlasdiu7sa7df9qr98a7doasd897a89s0d798fjkxhc"
-    if 'sKey' in request.GET: hmac = request.GET['sKey']
-    if 'logout' in request.GET: hmac = request.GET['logout']
+    if 'sKey' in request.GET:
+        hmac = request.GET['sKey']
+    if 'logout' in request.GET:
+        hmac = request.GET['logout']
     now = int(time.time() / 10)
     values = ''
     for v in ['oid', 'mn', 'firstName', 'lastName', 'mail']:
@@ -68,13 +73,21 @@ def handle_login(request):
     """
     #check if user already exists
     if not BadgeUser.objects.filter(object_id=request.GET['oid']).exists():
-        #create new user if first login
-        bu = BadgeUser(
-            firstname=request.GET['firstName'],
-            lastname=request.GET['lastName'],
-            email=request.GET['mail'],
-            student_id=request.GET['mn'],
-            object_id=request.GET['oid'])
+        #check if dummy user is already in the system
+        if BadgeUser.objects.filter(student_id=request.GET['mn']).exists():
+            bu = BadgeUser.objects.filter(student_id=request.GET['mn'])
+            bu.firstname=request.GET['firstName']
+            bu.lastname=request.GET['lastName']
+            bu.email=request.GET['mail']
+            bu.object_id=request.GET['oid']
+        else:
+            #create new user if first login and no dummy user exists
+            bu = BadgeUser(
+                firstname=request.GET['firstName'],
+                lastname=request.GET['lastName'],
+                email=request.GET['mail'],
+                student_id=request.GET['mn'],
+                object_id=request.GET['oid'])
         bu.save()
         request.session['sKey'] = request.GET['sKey']
         request.session['uID'] = bu.id
