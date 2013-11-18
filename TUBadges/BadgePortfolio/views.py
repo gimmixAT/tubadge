@@ -18,6 +18,9 @@ def login(request):
     """
     update_session(request)
     c = {}
+    if 'login_msg' in request.session:
+        c.update({'login_msg': request.session['login_msg']})
+        del request.session['login_msg']
     c.update(csrf(request))
     return render_to_response('login.html', c)
 

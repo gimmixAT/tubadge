@@ -3,6 +3,7 @@
 
         <div class="box login">
             <img src="{% static "images/logo.png" %}" alt="TU Wien Badges" width="168" height="66"/>
+            {% if login_msg %}<div style="text-align: center;">{{ login_msg }}</div>{%endif%}
             <form action="/" method="post">
                 {% csrf_token %}
                 <input name="mail" id="mail" placeholder="E-Mail Adresse" />

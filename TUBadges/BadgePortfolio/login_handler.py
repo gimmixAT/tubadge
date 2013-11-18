@@ -16,6 +16,10 @@ def check_if_login(request):
             bu = BadgeUser.objects.filter(email=request.POST['mail'])[0]
             if bu.check_password(request.POST['pw']):
                 request.session['uID'] = bu.id
+            else:
+                request.session['login_msg'] = "Falsches Passwort."
+        else:
+            request.session['login_msg'] = "Der User existiert nicht."
 
     elif 'sKey' in request.GET or 'logout' in request.GET:
         if authenticate(request):
@@ -91,11 +95,13 @@ def handle_login(request):
         bu.save()
         request.session['sKey'] = request.GET['sKey']
         request.session['uID'] = bu.id
+        request.session['last_action_date'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
         return True
     else:
         bu = BadgeUser.objects.filter(object_id=request.GET['oid'])
         request.session['sKey'] = request.GET['sKey']
         request.session['uID'] = bu.id
+        request.session['last_action_date'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
         return False
 
 
