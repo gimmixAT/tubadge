@@ -76,10 +76,10 @@ def handle_login(request):
         #check if dummy user is already in the system
         if BadgeUser.objects.filter(student_id=request.GET['mn']).exists():
             bu = BadgeUser.objects.filter(student_id=request.GET['mn'])
-            bu.firstname=request.GET['firstName']
-            bu.lastname=request.GET['lastName']
-            bu.email=request.GET['mail']
-            bu.object_id=request.GET['oid']
+            bu.firstname = request.GET['firstName']
+            bu.lastname = request.GET['lastName']
+            bu.email = request.GET['mail']
+            bu.object_id = request.GET['oid']
         else:
             #create new user if first login and no dummy user exists
             bu = BadgeUser(
