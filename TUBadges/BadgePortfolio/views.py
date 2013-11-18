@@ -82,7 +82,7 @@ def presets(request):
         if bu.role == BadgeUser.PROFESSOR:
             content = {'presets': BadgePreset.objects.filter(owner=bu.id)}
             content.update(get_header_content(request))
-
+            content.update({'debug': request.session['last_action_date']})
             return render_to_response('presets.html', content)
         else:
             return badges(request)
