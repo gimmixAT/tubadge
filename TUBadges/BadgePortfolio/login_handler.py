@@ -125,7 +125,7 @@ def update_session(request):
     """
     if 'uID' in request.session and request.session['uID'] != '':
         bu = BadgeUser.objects.get(id=request.session['uID'])
-        if 'last_action_date' in request.session and bu.logout_date and bu.logout_date > request.session['last_action_date']:
+        if 'last_action_date' in request.session and bu.logout_date and bu.logout_date > datetime.strptime(request.session['last_action_date'], '%Y-%m-%d %H:%M:%S.%f'):
             handle_logout(request)
         else:
-            request.session['last_action_date'] = datetime.now()
+            request.session['last_action_date'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
