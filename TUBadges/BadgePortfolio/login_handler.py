@@ -95,13 +95,13 @@ def handle_login(request):
         bu.save()
         request.session['sKey'] = request.GET['sKey']
         request.session['uID'] = bu.id
-        request.session['last_action_date'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        request.session['last_action_date'] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
         return True
     else:
         bu = BadgeUser.objects.filter(object_id=request.GET['oid'])
         request.session['sKey'] = request.GET['sKey']
         request.session['uID'] = bu.id
-        request.session['last_action_date'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        request.session['last_action_date'] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
         return False
 
 
@@ -117,7 +117,7 @@ def handle_logout(request, force=False):
     if force and 'oid' in request.GET:
         bu = BadgeUser.objects.get(object_id=request.GET['oid'])
         if bu:
-            bu.logout_date = datetime.now()
+            bu.logout_date = datetime.utcnow()
             bu.save()
 
     return HttpResponseRedirect('https://iu.zid.tuwien.ac.at/0.graphic.check')
@@ -131,7 +131,7 @@ def update_session(request):
     """
     if 'uID' in request.session and request.session['uID'] != '':
         bu = BadgeUser.objects.get(id=request.session['uID'])
-        if 'last_action_date' in request.session and bu.logout_date and bu.logout_date > datetime.strptime(request.session['last_action_date'], '%Y-%m-%d %H:%M:%S.%f'):
+        if 'last_action_date' in request.session and bu.logout_date and datetime.strptime(bu.logout_date.strftime('%Y-%m-%d %H:%M:%S.%f'), '%Y-%m-%d %H:%M:%S.%f') > datetime.strptime(request.session['last_action_date'], '%Y-%m-%d %H:%M:%S.%f'):
             handle_logout(request)
         else:
-            request.session['last_action_date'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+            request.session['last_action_date'] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')

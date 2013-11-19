@@ -33,10 +33,10 @@ def badges(request, uid=None):
     :type request: HttpRequest
     """
 
-    update_session(request)
-
     loginresponse = check_if_login(request)
     if loginresponse: return loginresponse
+
+    update_session(request)
 
     if 'uid' in request.GET:
         uid = request.GET['uid']
