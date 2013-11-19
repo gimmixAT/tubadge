@@ -12,6 +12,7 @@ import os
 from os.path import isfile, join, isdir
 import re
 from datetime import date
+from django.conf import settings
 
 
 def issue_badge_form(request):
@@ -88,7 +89,7 @@ def badge_preset_form(request):
         bu = get_loggedin_user(request)
         if bu.role == BadgeUser.PROFESSOR:
             shapes = []
-            shape_path = 'static/images/shapes/'
+            shape_path = settings.SVG_FOLDER+'shapes/'
             for s in os.listdir(shape_path):
                 if isfile(join(shape_path, s)):
                     shapes.append({
@@ -97,7 +98,7 @@ def badge_preset_form(request):
                     })
 
             patterns = []
-            pattern_path = 'static/images/patterns/'
+            pattern_path = settings.SVG_FOLDER+'patterns/'
             for p in os.listdir(pattern_path):
                 if isfile(join(pattern_path, p)):
                     p = p.replace('.svg', '')
