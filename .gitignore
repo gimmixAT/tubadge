@@ -215,3 +215,6 @@ pip-log.txt
 .mr.developer.cfg
 
 .idea/
+
+# Local Settings
+settings_local.py
