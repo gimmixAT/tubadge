@@ -4,7 +4,7 @@ from django.template import Context, loader
 from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from BadgePortfolio.models import *
-from login_handler import *
+from BadgePortfolio.login_handler import *
 from random import choice
 
 import logging

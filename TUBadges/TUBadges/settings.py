@@ -148,3 +148,9 @@ LOGGING = {
         },
     }
 }
+
+try:
+	from TUBadges.settings_local import *
+except ImportError:
+	pass
+
