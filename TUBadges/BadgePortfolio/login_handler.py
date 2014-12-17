@@ -61,7 +61,7 @@ def authenticate(request):
         hmac = request.GET['logout']
     now = int(time.time() / 10)
     values = ''
-    for v in ['oid', 'mn', 'firstName', 'lastName', 'mail']:
+    for v in ['oid', 'mn', 'firstName', 'lastName', 'mail', 'orgs']:
         if v in request.GET: values = ''.join(request.GET[v])
 
     for offset in [0, -1, 1, -2, 2]:
