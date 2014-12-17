@@ -7,6 +7,8 @@ ADMINS = (
     ('Administrator', 'gimmix.at@gmail.com'),
 )
 
+SSO_SECRET = "SuPeR SeCrEt sEcReT!"
+
 MANAGERS = ADMINS
 
 DATABASES = {

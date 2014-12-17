@@ -1,9 +1,10 @@
 from django.http import HttpResponseRedirect, HttpRequest
-from django.utils.crypto import salted_hmac
 import time
 from datetime import datetime
 from BadgePortfolio.models import BadgeUser
-
+from django.conf import settings
+import hashlib
+import hmac
 
 def check_if_login(request):
     """
@@ -53,18 +54,18 @@ def authenticate(request):
     :param request:
     :type request: HttpRequest
     """
-    secret = "asdjasldkjlasdiu7sa7df9qr98a7doasd897a89s0d798fjkxhc"
+    #secret = "asdjasldkjlasdiu7sa7df9qr98a7doasd897a89s0d798fjkxhc"
     if 'sKey' in request.GET:
-        hmac = request.GET['sKey']
+        skey = request.GET['sKey']
     if 'logout' in request.GET:
-        hmac = request.GET['logout']
+        skey = request.GET['logout']
     now = int(time.time() / 10)
     values = ''
-    for v in ['oid', 'mn', 'firstName', 'lastName', 'mail']:
-        if v in request.GET: values = ''.join(values, request.GET[v])
+    for v in ['oid', 'mn', 'firstName', 'lastName', 'mail', 'orgs']:
+        if v in request.GET: values += request.GET[v]
 
     for offset in [0, -1, 1, -2, 2]:
-        if salted_hmac('', values + str(now + offset), secret) == hmac:
+        if hmac.new(settings.SSO_SECRET.encode(encoding='latin1'), (values + str(now + offset)).encode(encoding='latin1'), hashlib.sha1).hexdigest() == skey:
             return True
 
     return False
@@ -111,7 +112,7 @@ def handle_logout(request, force=False):
     :type request: HttpRequest
     """
     if 'sKey' in request.session: del request.session['sKey']
-    del request.session['uID']
+    if 'uID' in request.session: del request.session['uID']
     request.session.flush()
 
     if force and 'oid' in request.GET:
