@@ -510,7 +510,7 @@ a {
         margin: 15px 0 0 0;
     }
         
-    input[type="button"], input[type="submit"], button {
+    input[type="button"], input[type="submit"], button, .button {
         background:#ffffff;
         color:#0070af;
         font-weight:600;
@@ -521,6 +521,11 @@ a {
         padding:5px 0 5px 0;
         float:right;
     }
+	
+	.button {
+		float:none;
+		display:inline-block;
+	}
 
         input[type="button"].cancel{
             color:#999999;
@@ -531,9 +536,10 @@ a {
             font-size: 16px;
         }
 
-        input[type="button"]:hover, input[type="submit"]:hover, button:hover {
+        input[type="button"]:hover, input[type="submit"]:hover, button:hover, .button:hover {
             text-shadow: 0px 2px 0px #ffffff, 2px 2px 0px #ffffff, -2px 2px 0px #ffffff;
             box-shadow: inset 0px -6px 0px #ffffff, inset 0px -8px 0px #0070af;
+			text-decoration:none;
         }
 
         input[type="button"].cancel:hover {
@@ -553,8 +559,7 @@ a {
     div.box.login {
         width:100%;
         max-width:400px;
-        overflow: hidden;
-        min-height:300px;
+        min-height:280px;
         height:0%;
         margin:0 auto 0 auto;
         -moz-box-sizing: border-box;
@@ -576,6 +581,16 @@ a {
             max-width:168px;
             height:auto;
         }
+		
+	div.box.ssologin {
+		position: absolute; 
+		bottom: -80px;
+		left: 0px;
+		right: 0px; 
+		text-align: center; 
+		font-weight: bold;
+		padding:13px 0;
+	}
 
 .modal{
     position: absolute;
