@@ -90,7 +90,7 @@ class LVA(models.Model):
     students = models.IntegerField()
 
     def __str__(self):
-        return (self.institute and unicode(self.institute)+"." or "") + (self.number and unicode(self.number)+" " or "") + self.title
+        return (self.institute and str(self.institute)+"." or "") + (self.number and str(self.number)+" " or "") + self.title
 
     class Meta:
         unique_together = ('institute', 'number')

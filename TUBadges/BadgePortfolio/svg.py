@@ -27,8 +27,8 @@ def build_svg(request):
 
     pattern_dom = minidom.parse(settings.SVG_FOLDER+'patterns/'+pattern+'.svg')
     shape_dom = minidom.parse(settings.SVG_FOLDER+'shapes/'+shape+'.svg')
-    pattern_root = pattern_dom.documentElement;
-    shape_root = shape_dom.documentElement;
+    pattern_root = pattern_dom.documentElement
+    shape_root = shape_dom.documentElement
 
     content = {
         'pattern': pattern_root.toxml(),
@@ -57,7 +57,7 @@ def build_bg_svg(request):
         pattern = request.GET['p']
 
     pattern_dom = minidom.parse(settings.SVG_FOLDER+'patterns/'+pattern+'.svg')
-    pattern_root = pattern_dom.documentElement;
+    pattern_root = pattern_dom.documentElement
 
     content = {
         'pattern': pattern_root.toxml(),

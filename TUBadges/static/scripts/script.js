@@ -243,7 +243,7 @@ function setupBadgeForm(container){
                 if(!data.error) $('#students').val(data.count);
             }
         });
-    }
+    };
 
     container.find('#semester').change(handleSemesterChange);
     container.find('#year').change(handleSemesterChange);
@@ -252,6 +252,7 @@ function setupBadgeForm(container){
         $(this).autocomplete({
             serviceUrl: $(this).data('serviceurl'),
             paramName: 'q',
+            preventBadQueries: false,
             onSelect: function(d){
                 $('#lva_id').val(d.data.id);
                 //$('#students').val(d.data.students);

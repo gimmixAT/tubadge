@@ -317,7 +317,7 @@ def issue_badge(request):
                             lvap = re.match('^([0-9]{3})\.([0-9]{3}) ?(.+)$', request.POST['lva'])
                             if lvap:
                                 #check if lva exists already
-                                if LVA.objects.filter(insititute=lvap.group(1), number=lvap.group(2)).exists():
+                                if LVA.objects.filter(institute=lvap.group(1), number=lvap.group(2)).exists():
                                     b.lva = LVA.objects.get()
                                 else:
                                     lva = LVA()

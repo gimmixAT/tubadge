@@ -23,9 +23,14 @@
                     </ul>
                 </div>
 
-                <div class="col-3">
+                <div class="col-3" style="position: relative;">
                     <h2>Muster</h2>
-                    <ul class="patterns">
+                    <div class="browse">
+                        <a href="#previous" class="prev" id="patterns_prev">&laquo;</a>
+                        <span class="page" id="patterns_page">-/-</span>
+                        <a href="#next" class="next" id="patterns_next">&raquo;</a>
+                    </div>
+                    <ul class="patterns slider" data-items_per_page="16" data-next="patterns_next" data-prev="patterns_prev" data-pageindicator="patterns_page">
                         {% for p in patterns %}
                         <li><a href="#change-pattern" data-name="{{ p.name }}"><img src="{{ p.url }}" /></a><div class="pad"></div></li>
                         {% endfor %}

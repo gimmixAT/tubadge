@@ -1,10 +1,14 @@
 from django.contrib import admin
-from BadgePortfolio.models import BadgeUser, LVA
+from BadgePortfolio.models import *
 from BadgePortfolio.forms import BadgeUserForm, LVAForm
 
+class BadgeReferenceInline(admin.TabularInline):
+    model = Badge
+    fk_name = 'awardee'
 
 class BadgeUserAdmin(admin.ModelAdmin):
     form = BadgeUserForm
+    inlines = [BadgeReferenceInline, ]
 
 admin.site.register(BadgeUser, BadgeUserAdmin)
 
