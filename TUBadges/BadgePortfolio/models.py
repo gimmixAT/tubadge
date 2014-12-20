@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 import re
 from datetime import date
 from django.db.models.fields import TextField
+import uuid
 
 
 class Tag(models.Model):
@@ -22,7 +23,7 @@ class BadgeUser(models.Model):
         (STUDENT, 'Student'),
         (PROFESSOR, 'Professor')
     )
-    email = models.EmailField(unique=True, default="")
+    email = models.EmailField(unique=True, default=str(uuid.uuid4()) + "@tubadges.iguw.tuwien.ac.at")
     password = models.CharField(max_length=128, blank=True)
     firstname = models.CharField(max_length=50, default="")
     lastname = models.CharField(max_length=50, default="")

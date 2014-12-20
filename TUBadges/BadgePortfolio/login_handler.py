@@ -12,7 +12,7 @@ def check_if_login(request):
     """
     if 'uID' in request.session and request.session['uID'] != '' and not BadgeUser.objects.filter(id=request.session['uID']).exists():
         del request.session['uID']
-    if 'pw' in request.POST and 'mail' in request.POST:
+    if 'pw' in request.POST and request.POST['pw'] != '' and 'mail' in request.POST and request.POST['mail'] != '':
         if BadgeUser.objects.filter(email=request.POST['mail']).exists():
             bu = BadgeUser.objects.filter(email=request.POST['mail'])[0]
             if bu.check_password(request.POST['pw']):
