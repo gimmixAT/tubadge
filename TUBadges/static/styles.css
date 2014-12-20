@@ -480,8 +480,8 @@ a {
         border-bottom:1px solid #111111;
         width:100%;
         margin:10px 0 10px 0;
-        -moz-box-shadow: 1px -5px 0px #ffffff, 1px 0px 0px #111111, -1px -5px 0px #ffffff, -1px 0px 0px #111111;
-        box-shadow: 1px -5px 0px #ffffff, 1px 0px 0px #111111, -1px -5px 0px #ffffff, -1px 0px 0px #111111;
+        -moz-box-shadow: 1px -5px 0px 1px #ffffff, 1px 0px 0px #111111, -1px -5px 0px 1px #ffffff, -1px 0px 0px #111111;
+        box-shadow: 1px -5px 0px 1px #ffffff, 1px 0px 0px #111111, -1px -5px 0px 1px #ffffff, -1px 0px 0px #111111;
         height: 36px;
     }
 
