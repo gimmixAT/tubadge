@@ -295,14 +295,14 @@ def issue_badge(request):
                     if BadgePresetSemesterCounts.objects.filter(semester=b.semester, year=b.year, preset_id=b.preset_id).exists():
                         bpcc = BadgePresetSemesterCounts.objects.get(semester=b.semester, year=b.year, preset_id=b.preset_id);
                         if 'students' in request.POST and int(request.POST['students']) != bpcc.candidates and int(request.POST['students']) > b.preset.issued_badges.count():
-                            bpcc.candidates = request.POST['students']
+                            bpcc.candidates = int(request.POST['students'])
                             bpcc.save()
                     else:
                         bpcc = BadgePresetSemesterCounts()
                         bpcc.year = b.year
                         bpcc.semester = b.semester
                         bpcc.preset = bp
-                        if 'students' in request.POST and request.POST['students'] > b.preset.issued_badges.count():
+                        if 'students' in request.POST and int(request.POST['students']) > b.preset.issued_badges.count():
                             bpcc.candidates = int(request.POST['students'])
                         else:
                             bpcc.candidates = b.preset.issued_badges.count() + 1

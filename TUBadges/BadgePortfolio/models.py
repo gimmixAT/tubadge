@@ -11,7 +11,7 @@ from django.db.models.fields import TextField
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -73,7 +73,7 @@ class BadgeUser(models.Model):
         else:
             return BadgeUser.objects.filter(Q(email__icontains=query) | Q(student_id__startswith=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.student_id + " - " + self.firstname+" "+self.lastname+" ("+self.email+")"
 
     def credibility(self, rating):
@@ -89,7 +89,7 @@ class LVA(models.Model):
     tutors = models.ManyToManyField(BadgeUser)
     students = models.IntegerField()
 
-    def __unicode__(self):
+    def __str__(self):
         return (self.institute and unicode(self.institute)+"." or "") + (self.number and unicode(self.number)+" " or "") + self.title
 
     class Meta:
