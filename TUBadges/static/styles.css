@@ -198,13 +198,16 @@ a {
         .badge.inline {
             width: auto;
             position: static;
-            display: block-inline;
             margin:10px 0 10px 0;
         }
 
         .badge.hor {
             overflow: hidden;
             max-height: 150px;
+        }
+        
+        .badge.hor h2 {
+            display:inline;
         }
 
         .col .badge {
