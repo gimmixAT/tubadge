@@ -99,7 +99,7 @@ def handle_login(request):
         request.session['last_action_date'] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
         return True
     else:
-        bu = BadgeUser.objects.filter(object_id=request.GET['oid'])
+        bu = BadgeUser.objects.get(object_id=request.GET['oid'])
         request.session['sKey'] = request.GET['sKey']
         request.session['uID'] = bu.id
         request.session['last_action_date'] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
