@@ -349,26 +349,18 @@ a {
                     background-repeat: no-repeat;
                     background-position: center center;
                     display: block;
+                    position: relative;
                 }
 
                     .badge ul.actions li > a:hover {
                         opacity: 1;
                     }
 
-                    .badge ul.actions li > a.edit {
-                        background-image:url('./images/icon_action_edit.png');
-                    }
-
-                    .badge ul.actions li > a.duplicate {
-                        background-image:url('./images/icon_action_duplicate.png');
-                    }
-
-                    .badge ul.actions li > a.delete {
-                        background-image:url('./images/icon_action_delete.png');
-                    }
-
-                    .badge ul.actions li > a.issue {
-                        background-image:url('./images/icon_action_issue.png');
+                    .badge ul.actions li > a svg {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        margin: -10px 0 0 -10px;
                     }
 
         .badge .public-indicator {
